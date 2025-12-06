@@ -2,6 +2,7 @@
 #define STACK_H
 
 #include <stdio.h>
+
 #include "lexical.h"
 
 typedef Token_str Stack_t;
@@ -10,8 +11,7 @@ enum StackErr_t {
     STK_NO_ERR = 0
 };
 
-struct Stack_str
-{
+struct Stack_str {
     Stack_t* data;
     size_t   capacity;
     size_t   size;

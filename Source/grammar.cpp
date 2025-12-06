@@ -14,17 +14,17 @@
 
 //---------------------------------------------------------------------------------------------------------------------
 
-#define CTOR_ADD(left_son, right_son)  Node_Ctor(TYPE_OPER, (NodeData_t) {.oper = OP_ADD}, left_son, right_son)
-#define CTOR_SUB(left_son, right_son)  Node_Ctor(TYPE_OPER, (NodeData_t) {.oper = OP_SUB}, left_son, right_son)
-#define CTOR_MUL(left_son, right_son)  Node_Ctor(TYPE_OPER, (NodeData_t) {.oper = OP_MUL}, left_son, right_son)
-#define CTOR_DIV(left_son, right_son)  Node_Ctor(TYPE_OPER, (NodeData_t) {.oper = OP_DIV}, left_son, right_son)
-#define CTOR_POW(left_son, right_son)  Node_Ctor(TYPE_OPER, (NodeData_t) {.oper = OP_POW}, left_son, right_son)
+#define CTOR_ADD(left_son, right_son)  Node_Ctor(TYPE_OPER, (NodeData_t) {.oper = OP_ADD},  left_son, right_son)
+#define CTOR_SUB(left_son, right_son)  Node_Ctor(TYPE_OPER, (NodeData_t) {.oper = OP_SUB},  left_son, right_son)
+#define CTOR_MUL(left_son, right_son)  Node_Ctor(TYPE_OPER, (NodeData_t) {.oper = OP_MUL},  left_son, right_son)
+#define CTOR_DIV(left_son, right_son)  Node_Ctor(TYPE_OPER, (NodeData_t) {.oper = OP_DIV},  left_son, right_son)
+#define CTOR_POW(left_son, right_son)  Node_Ctor(TYPE_OPER, (NodeData_t) {.oper = OP_POW},  left_son, right_son)
 #define CTOR_SQRT(left_son)            Node_Ctor(TYPE_OPER, (NodeData_t) {.oper = OP_SQRT}, left_son, NULL)
 
-#define CTOR_SIN(left_son)             Node_Ctor(TYPE_OPER, (NodeData_t) {.oper = OP_SIN}, left_son, NULL)
-#define CTOR_COS(left_son)             Node_Ctor(TYPE_OPER, (NodeData_t) {.oper = OP_COS}, left_son, NULL)
-#define CTOR_TAN(left_son)             Node_Ctor(TYPE_OPER, (NodeData_t) {.oper = OP_TAN}, left_son, NULL)
-#define CTOR_COT(left_son)             Node_Ctor(TYPE_OPER, (NodeData_t) {.oper = OP_COT}, left_son, NULL)
+#define CTOR_SIN(left_son)             Node_Ctor(TYPE_OPER, (NodeData_t) {.oper = OP_SIN},  left_son, NULL)
+#define CTOR_COS(left_son)             Node_Ctor(TYPE_OPER, (NodeData_t) {.oper = OP_COS},  left_son, NULL)
+#define CTOR_TAN(left_son)             Node_Ctor(TYPE_OPER, (NodeData_t) {.oper = OP_TAN},  left_son, NULL)
+#define CTOR_COT(left_son)             Node_Ctor(TYPE_OPER, (NodeData_t) {.oper = OP_COT},  left_son, NULL)
 
 #define CTOR_ASIN(left_son)            Node_Ctor(TYPE_OPER, (NodeData_t) {.oper = OP_ASIN}, left_son, NULL)
 #define CTOR_ACOS(left_son)            Node_Ctor(TYPE_OPER, (NodeData_t) {.oper = OP_ACOS}, left_son, NULL)
@@ -36,39 +36,127 @@
 #define CTOR_TANH(left_son)            Node_Ctor(TYPE_OPER, (NodeData_t) {.oper = OP_TANH}, left_son, NULL)
 #define CTOR_COTH(left_son)            Node_Ctor(TYPE_OPER, (NodeData_t) {.oper = OP_COTH}, left_son, NULL)
 
-#define CTOR_EXP(left_son)             Node_Ctor(TYPE_OPER, (NodeData_t) {.oper = OP_EXP}, left_son, NULL)
-#define CTOR_LN(left_son)              Node_Ctor(TYPE_OPER, (NodeData_t) {.oper = OP_LN}, left_son, NULL)    
+#define CTOR_EXP(left_son)             Node_Ctor(TYPE_OPER, (NodeData_t) {.oper = OP_EXP},  left_son, NULL)
+#define CTOR_LN(left_son)              Node_Ctor(TYPE_OPER, (NodeData_t) {.oper = OP_LN},   left_son, NULL)    
 
-#define CTOR_CONST(number)             Node_Ctor(TYPE_NUM,  (NodeData_t) {.num = number}, NULL, NULL)
-#define CTOR_VAR(var_name)             Node_Ctor(TYPE_VAR,  (NodeData_t) {.var  = Get_Var_Ptr(var_name)},  NULL, NULL)
+#define CTOR_CONST(number)             Node_Ctor(TYPE_NUM,  (NodeData_t) {.num = number},   NULL,     NULL)
+#define CTOR_VAR(var_name)             Node_Ctor(TYPE_VAR,  (NodeData_t) {.var = var_name}, NULL,     NULL)
 
 //---------------------------------------------------------------------------------------------------------------------
 
-TreeNode_t* Get_Grammar(char** str) 
-{    
-    assert(str);
-    assert(*str);    
+#define TKN_CODE(token)  (token)->code
+#define TKN_NAME(token)  (token)->name
 
-    ONDEBUG(printf("Gra: [%s]\n", *str);)
+#define NEXT_TOKEN       (*token)++ ;
 
-    TreeNode_t* result = Get_Equation(str); 
+//---------------------------------------------------------------------------------------------------------------------
+
+TreeNode_t* Get_Grammar(Token_str** token) {    
+    assert( token); 
+    assert(*token); 
+
+    TreeNode_t* result = Get_Statement(token); 
     
-    if (**str != '$') 
+    if ( TKN_CODE(*token) != _END_PROGRAM_) 
     {
-        fprintf(stderr, "GetG: Sintax error\n");
+        fprintf(stderr, "%s in %s:%d: Sintax error\n", __func__, __FILE__, __LINE__);
         return NULL;
     }
 
-    (*str)++ ;
+    NEXT_TOKEN;
     return result;
 }
 
-TreeNode_t* Get_Equation(char** str) 
-{
-    assert(str);
-    assert(*str);   
+TreeNode_t* Get_Statement(Token_str** token) {    
+    assert( token); 
+    assert(*token); 
 
-    ONDEBUG(printf("Equ: %s\n", *str);)
+    TreeNode_t* result = Get_Operator(token); 
+    
+    if ( TKN_CODE(*token) != _END_STATEMENT_) 
+    {
+        fprintf(stderr, "%s in %s:%d: Sintax error\n", __func__, __FILE__, __LINE__);
+        return NULL;
+    }
+
+    NEXT_TOKEN;
+    return result;
+}
+
+TreeNode_t* Get_Operator(Token_str** token) {    
+    assert( token); 
+    assert(*token); 
+    
+    TreeNode_t* result = NULL;
+
+    switch ( TKN_CODE(*token) )
+    {
+    case _ASSIGNMENT_:  result = Get_Assignment (token);  break;
+    case _IF_:          result = Get_If_oper    (token);  break;
+    case _WHILE_:       result = Get_While_oper (token);  break;
+
+    default:            result = NULL;                    break;
+    }
+
+    return result;
+}
+
+TreeNode_t* Get_Block(Token_str** token) {    
+    assert( token); 
+    assert(*token); 
+    
+    TreeNode_t* result = NULL;
+
+    if ( TKN_CODE(*token) == _BEGIN_OPER_ )
+    {
+        NEXT_TOKEN;
+
+        do {
+            Get_Statement(token);
+        } while()
+    }
+
+    NEXT_TOKEN;
+    return result;
+}
+
+TreeNode_t* Get_While_oper(Token_str** token) {
+    assert( token);
+    assert(*token);
+
+    TreeNode_t* result = NULL;
+
+}
+
+TreeNode_t* Get_If_oper(Token_str** token) {
+    assert( token);
+    assert(*token);
+
+    TreeNode_t* result = NULL;
+
+}
+
+TreeNode_t* Get_Assignment(Token_str** token) {
+    assert( token);
+    assert(*token);
+
+    TreeNode_t* left_hand_side  = Get_Variable(token);
+
+    if ( TKN_CODE(*token) != _ASSIGNMENT_) 
+    {
+        fprintf(stderr, "%s in %s:%d: Sintax error\n", __func__, __FILE__, __LINE__);
+        return NULL;
+    }
+
+    NEXT_TOKEN;
+    
+    TreeNode_t* right_hand_side = Get_Equation(token);
+
+}
+
+TreeNode_t* Get_Equation(Token_str** token) {
+    assert( token);
+    assert(*token);   
 
     char* str_before = *str;
 
@@ -77,10 +165,10 @@ TreeNode_t* Get_Equation(char** str)
     
     result = Get_Term(str);
 
-    while(**str == '+' || **str == '-') 
+    while( TKN_CODE(*token) == _ADD_OP_ || TKN_CODE(*token) == _SUB_OP_ ) 
     {
         int oper = **str;
-        (*str)++ ;
+        NEXT_TOKEN;
 
 
         TreeNode_t* right_son = Get_Term(str);
@@ -310,59 +398,38 @@ TreeNode_t* Get_Unary(char** str, char* oper_str)
     return NULL;
 }
 
-TreeNode_t* Get_Variable(char** str, char* var_str) 
-{
-    assert(str);
-    assert(*str);
-    assert(var_str);
+TreeNode_t* Get_Variable(Token_str** token) {
+    assert( token);
+    assert(*token);
 
-    ONDEBUG(printf("Var: %s\n", *str);)
-
-    TreeNode_t* result  = NULL;
-    size_t      len_var = strlen(var_str);
-
-    for (size_t idx = 0; idx < VAR_COUNT; idx++) 
-    {
-        if (strcmp(var_str, Var_info_arr[idx].name) == 0)
-        {
-            result = CTOR_VAR( Var_info_arr[idx].name );
-            break;
-        }
+    if ( TKN_CODE(*token) != _UNDEF_TOKEN_) {
+        fprintf(stderr, "%s in %s:%d: token almost determined with code %d\n", __func__, __FILE__, __LINE__, TKN_CODE(*token));
+        return NULL;
     }
 
-    if ( ! result )
-        fprintf(stderr, "Get_Variable: unknown variable\n");
+    TKN_CODE(*token) = _VARIABLE_;
+    char* var_name   = TKN_NAME(*token);
 
-    return result;
+    NEXT_TOKEN;
+
+    return CTOR_VAR(var_name);
 }
 
-TreeNode_t* Get_Number(char** str, char* num_str)
-{
-    assert(str);
-    assert(*str);
+TreeNode_t* Get_Number(Token_str** token) {
+    assert( token);
+    assert(*token);
 
-    ONDEBUG(printf("Num: %s\n", *str);)
+    if ( TKN_CODE(*token) != _UNDEF_TOKEN_) {
+        fprintf(stderr, "%s in %s:%d: token almost determined with code %d\n", __func__, __FILE__, __LINE__, TKN_CODE(*token));
+        return NULL;
+    }
 
-    double num = strtod(num_str, NULL);
+    TKN_CODE(*token) = _NUMBER_;
+    double num       = strtod( TKN_NAME(*token), NULL);
+
+    NEXT_TOKEN;
 
     return CTOR_CONST(num);
-}
-
-Operators Identify_Oper(char* oper_str) {
-    assert(oper_str);
-
-    Operators result = OP_UNKNOWN;
-
-    for (size_t idx = 0; idx < OPER_COUNT; idx++) 
-    {
-        if (strcmp(oper_str, Oper_info_arr[idx].name) == 0) 
-        {
-            result = Oper_info_arr[idx].code;
-            break;
-        }
-    }
-
-    return result;
 }
 
 //---------------------------------------------------------------------------------------------------------------------
@@ -372,19 +439,29 @@ Operators Identify_Oper(char* oper_str) {
 #undef CTOR_MUL
 #undef CTOR_DIV
 #undef CTOR_POW
+
 #undef CTOR_SIN
 #undef CTOR_COS
 #undef CTOR_TAN
 #undef CTOR_COT
+
 #undef CTOR_ASIN
 #undef CTOR_ACOS
 #undef CTOR_ATAN
 #undef CTOR_ACOT
+
 #undef CTOR_SINH
 #undef CTOR_COSH
 #undef CTOR_TANH
 #undef CTOR_COTH
+
 #undef CTOR_LN
 #undef CTOR_EXP
+
 #undef CTOR_CONST
 #undef CTOR_VAR
+
+//---------------------------------------------------------------------------------------------------------------------
+
+#undef TKN_CODE
+#undef TKN_NAME

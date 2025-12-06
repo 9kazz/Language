@@ -84,7 +84,7 @@ struct Tree_t {
 union NodeData_t {
     Operators oper;
     double    num;
-    VarArr_t* var;
+    char*     var;
 };
 
 struct TreeNode_t {
@@ -104,11 +104,6 @@ struct OperArr_t {
     char*     name;
     char*     symbol;
     Operators code;
-};
-
-struct VarArr_t {
-    char*  name;
-    double value;
 };
 
 extern OperArr_t Oper_info_arr[];

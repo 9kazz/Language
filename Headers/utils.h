@@ -10,7 +10,7 @@ enum Func_status {
     END_WITH_SUC = 1
 };
 
-int       skip_space           (char** str);
+size_t    skip_space           (char** str);
 Compare   Double_compare       (double num_1, double num_2);
 
 #define SAFE_CALLOC(name, size_of_buf, el_type)                                                             \

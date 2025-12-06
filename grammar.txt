@@ -1,10 +1,10 @@
 <GRAM>  ::= <STAT>+ "$"
 <STAT>  ::= <OPER> ";"
-<OPER>  ::= <ASS> | <IF> | <WHILE>
+<OPER>  ::= <ASN> | <IF> | <WHILE>
 <BLOCK> ::= "{" <STAT>+ "}" | <STAT>
 <WHILE> ::= "while" "(" <EXP> ")" <BLOCK>
 <IF>    ::= "if" "(" <EXP> ")" <BLOCK>
-<ASS>   ::= <VAR> "=" <EXP>
+<ASN>   ::= <VAR> "=" <EXP>
 <EXP>   ::= <TERM> ("+" "-" <TERM>)*
 <TERM>  ::= <PRIM> ("*" "/" <PRIM>)*
 <PRIM>  ::= "(" <EXP> ")" | <NUM> | <VAR>

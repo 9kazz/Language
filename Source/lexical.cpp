@@ -5,11 +5,11 @@
 #include <sys/stat.h>
 #include <ctype.h>
 
+#include "lexical.h"
 #include "stack.h"
 #include "types.h"
 #include "Logfile.h"
 #include "utils.h"
-#include "lexical.h"
 #include "verify.h"
 #include "tree.h"
 
@@ -21,12 +21,15 @@ static Token_info Token_Info_Arr[] =
     {
         FILL_ONE_TOKEN ( "(",      _OPEN_BRACK_),
         FILL_ONE_TOKEN ( ")",      _CLOSE_BRACK_),
+        FILL_ONE_TOKEN ( "{",      _BEGIN_OPER_),
+        FILL_ONE_TOKEN ( "}",      _END_OPER_),
+        FILL_ONE_TOKEN ( ";",      _END_STATEMENT_),
         FILL_ONE_TOKEN ( "==",     _LOG_EQUAL_),
         FILL_ONE_TOKEN ( "=",      _ASSIGNMENT_),
         FILL_ONE_TOKEN ( "if",     _IF_),
         FILL_ONE_TOKEN ( "else",   _ELSE_),
         FILL_ONE_TOKEN ( "while",  _WHILE_),
-        FILL_ONE_TOKEN ( "$",      _END_)
+        FILL_ONE_TOKEN ( "$",      _END_PROGRAM_)
     };
 
 #undef FILL_ONE_TOKEN
@@ -43,10 +46,15 @@ Tree_t* Create_Tree_from_disk(const char* input_file_name) {
     Disk_t* disk_buf = Read_file_to_buffer(disk_file);
     char*   str      = disk_buf->buffer;
 
+    Stack_str* token_stk = Create_token_stack(str);
+    
     SAFE_CALLOC(tree, 1, Tree_t);
-
     DISK(tree) = disk_buf;
-
+    // ROOT(tree) = 
+    
+    Stack_Dtor(token_stk);
+    free(str);
+    
     return tree;
 }
 
@@ -58,36 +66,8 @@ void Test_Grammar(const char* input_file_name) {
     Disk_t* disk_buf = Read_file_to_buffer(disk_file);
     char*   str      = disk_buf->buffer;
 
-
-    Stack_str* token_stk = Stack_Ctor(10);
-    
-    for (size_t idx = 0; idx < STK_CAPACITY(token_stk); idx++)
-        STK_DATA(token_stk)[idx].code = _UNDEF_TOKEN_;
-
-    size_t count_of_tokens = Fill_token_array(str, STK_DATA(token_stk));
-
-    printf("count_of_tokens: %d\n", count_of_tokens);
-
-    for(size_t idx = 0; idx < STK_CAPACITY(token_stk); idx++)
-        printf("%d\t%s\n", STK_DATA(token_stk)[idx].code, STK_DATA(token_stk)[idx].name);
-
+    Stack_str* token_stk = Create_token_stack(str);
     Stack_Dtor(token_stk);
-
-    // SAFE_CALLOC(token_arr, 10, Token_str);
-    // for (size_t i = 0; i < 10; i++) {
-    //     token_arr[i].code = _UNDEF_TOKEN_;
-    // }
-    // size_t count_of_tokens = Fill_token_array(str, token_arr);
-
-    // printf("count_of_tokens: %d\n", count_of_tokens);
-    // for(size_t i = 0; i < TOKEN_COUNT; i++) {
-    //     printf("%d\t%s\n", token_arr[i].code, token_arr[i].name);
-    // }
-
-    // for(size_t i = 0; i < TOKEN_COUNT; i++) {
-    //     if (token_arr[i].name != NULL)  free(token_arr[i].name);
-    // }
-    // free(token_arr);
 
     free(str);
     free(disk_buf);
@@ -119,21 +99,51 @@ Disk_t* Read_file_to_buffer(FILE* input_file) {
     return disk;
 }
 
-size_t Fill_token_array(char* str, Token_str* token_arr) {
+Stack_str* Create_token_stack (char* str) {
     assert(str);
-    assert(token_arr);
 
-    Token_str* token_ptr_at_start = token_arr;
+    const size_t START_STACK_CAPACITY = 100;
+
+    Stack_str* token_stk = Stack_Ctor( START_STACK_CAPACITY );
+
+    size_t count_of_tokens = Fill_token_stack(str, token_stk);
+
+    ONDEBUG( printf("count_of_tokens: %d\n", count_of_tokens);
+             printf("Code\tName\t\tLine\tPos\n");
+             for(size_t idx = 0; idx < STK_CAPACITY(token_stk); idx++) {
+                printf("%d\t%s\t", STK_DATA(token_stk)[idx].code, STK_DATA(token_stk)[idx].name);
+                printf("\t%d\t%d\n", STK_DATA(token_stk)[idx].lex_info.line, STK_DATA(token_stk)[idx].lex_info.pos);
+             } 
+    );
+
+    return token_stk;
+}
+
+#define NEXT_TOKEN          \
+    token_arr++ ;           \
+    STK_SIZE(token_stk)++ ; \
+
+size_t Fill_token_stack (char* str, Stack_str* token_stk) {
+    assert(str);
+    assert(token_stk);
+
+    char* str_at_start   = str;
+    Token_str* token_arr = STK_DATA(token_stk);
+
+    size_t line_num = 1;
 
     while (*str != '\0') 
     {   
-        skip_space(&str);
+        line_num += skip_space(&str);
 
         for (size_t cur_tok = 0; cur_tok < TOKEN_COUNT; cur_tok++)
         {
             if ( strncmp(str, Token_Info_Arr[cur_tok].key_word, Token_Info_Arr[cur_tok].len) == 0 )
             {
-                token_arr->code = Token_Info_Arr[cur_tok].code;
+                token_arr->code          = Token_Info_Arr[cur_tok].code;
+                token_arr->lex_info.pos  = str - str_at_start;
+                token_arr->lex_info.line = line_num;
+                
                 str += Token_Info_Arr[cur_tok].len;
                 break;
             }
@@ -141,29 +151,18 @@ size_t Fill_token_array(char* str, Token_str* token_arr) {
 
         if (token_arr->code != _UNDEF_TOKEN_)
         {
-            token_arr++ ;
+            NEXT_TOKEN;
             continue;
         }
 
-        const size_t MAX_ID_LEN = 64;
-        SAFE_CALLOC(id_name, MAX_ID_LEN, char)
-
-        for (size_t cur_id_len = 0; 
-            (isalpha(*str) || isdigit(*str) || *str == '_')  &&  cur_id_len < MAX_ID_LEN; 
-            cur_id_len++)
+        size_t id_len = 0;
+        while (isalpha(*(str + id_len)) || isdigit(*(str + id_len)) || *(str + id_len) == '_')
         {
-            id_name[cur_id_len] = *str;
-            str++ ;
+            id_len++ ;
         }
 
-        // size_t id_len = 0;
-        // while (isalpha(*str) || isdigit(*str) || *str == '_') 
-        // {
-        //     id_len++ ;
-        // }
-
-        // char* id_name = strndup(str, id_len);
-
+        char* id_name = strndup(str, id_len);
+        str += id_len;
 
         if (*id_name == '\0')
         {
@@ -171,10 +170,15 @@ size_t Fill_token_array(char* str, Token_str* token_arr) {
             return 0;
         }
 
-        token_arr->name = id_name;
-        token_arr++ ;
+        token_arr->name          = id_name;
+        token_arr->lex_info.pos  =  str - str_at_start;
+        token_arr->lex_info.line = line_num;
+        
+        NEXT_TOKEN;
     }
 
-    return token_arr - token_ptr_at_start; ;
+    return token_arr - STK_DATA(token_stk);
 }
+
+#undef NEXT_TOKEN
 

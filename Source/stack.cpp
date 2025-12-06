@@ -2,8 +2,8 @@
 #include <stdlib.h>
 #include <assert.h>
   
-#include "utils.h"
 #include "stack.h"
+#include "utils.h"
 
 Stack_str* Stack_Ctor(size_t capacity) 
 {

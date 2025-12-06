@@ -10,19 +10,21 @@
 #include "utils.h"
 #include "verify.h"
 
-int skip_space(char** str) {
+size_t skip_space(char** str) {
     assert(str);
     assert(*str);
     
-    int count_of_space = 0;
+    int count_of_lines = 0;
 
     while( isspace(**str) ) 
     {
-        count_of_space++ ;
+        if (**str == '\n')
+            count_of_lines++ ;
+
         (*str)++ ;
     }
 
-    return count_of_space;
+    return count_of_lines;
 }
 
 Compare Double_compare(double num_1, double num_2) {
