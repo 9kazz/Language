@@ -3,7 +3,7 @@
 
 #include <stdio.h>
 
-
+#include "types.h"
 
 Tree_t*     Tree_Ctor(TreeNode_t* root);
 TreeErr_t   Tree_Dtor(Tree_t* tree);

@@ -11,6 +11,7 @@
 #include "lexical.h"
 #include "verify.h"
 #include "tree.h"
+#include "grammar.h"
 
 //---------------------------------------------------------------------------------------------------------------------
 
@@ -22,11 +23,11 @@
 
 #define NEXT_TOKEN  (*token)++ ;
 
-#define CHECK_SYNTAX(token_code)                                                        \
-    if ( TKN_CODE(*token) != token_code)                                                \
-    {                                                                                   \
-        fprintf(stderr, "%s in %s:%d: Sintax error\n", __func__, __FILE__, __LINE__);   \
-        return NULL;                                                                    \
+#define CHECK_SYNTAX(token_code)                                                                                                             \
+    if ( TKN_CODE(*token) != token_code)                                                                                                     \
+    {                                                                                                                                        \
+        fprintf(stderr, "%s in %s:%d: Sintax error (expect: %d | got: %d)\n", __func__, __FILE__, __LINE__), token_code, TKN_CODE(*token);   \
+        return NULL;                                                                                                                         \
     }
 
 //---------------------------------------------------------------------------------------------------------------------
@@ -35,11 +36,14 @@ TreeNode_t* Get_Grammar(Token_str** token) {
     assert( token); 
     assert(*token); 
     
+    Token_str* token_at_start = *token;
+
     TreeNode_t* result = Get_Statement(token);
 
     if ( ! result)
     {                                                                                   
         fprintf(stderr, "%s in %s:%d: Sintax error\n", __func__, __FILE__, __LINE__);   
+        *token = token_at_start;
         return NULL;                                                                    
     }
 
@@ -54,6 +58,7 @@ TreeNode_t* Get_Grammar(Token_str** token) {
     CHECK_SYNTAX(_END_PROGRAM_);
     NEXT_TOKEN;
 
+    *token = token_at_start;
     return result;
 }
 

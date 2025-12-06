@@ -4,6 +4,7 @@
 #include <stdio.h>
 
 #include "lexical.h"
+#include "types.h"
 
 typedef Token_str Stack_t;
 
