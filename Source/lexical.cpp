@@ -29,7 +29,28 @@ static Token_info Token_Info_Arr[] =
         FILL_ONE_TOKEN ( "if",     _IF_),
         FILL_ONE_TOKEN ( "else",   _ELSE_),
         FILL_ONE_TOKEN ( "while",  _WHILE_),
-        FILL_ONE_TOKEN ( "$",      _END_PROGRAM_)
+        FILL_ONE_TOKEN ( "$",      _END_PROGRAM_),
+        
+        FILL_ONE_TOKEN ( "+",      _MATH_ADD_),
+        FILL_ONE_TOKEN ( "-",      _MATH_SUB_),
+        FILL_ONE_TOKEN ( "*",      _MATH_MUL_),
+        FILL_ONE_TOKEN ( "/",      _MATH_DIV_),
+        FILL_ONE_TOKEN ( "^",      _MATH_POW_),
+        FILL_ONE_TOKEN ( "sqrt",   _MATH_SQRT_),
+        FILL_ONE_TOKEN ( "sin",    _MATH_SIN_),
+        FILL_ONE_TOKEN ( "cos",    _MATH_COS_),
+        FILL_ONE_TOKEN ( "tan",    _MATH_TAN_),
+        FILL_ONE_TOKEN ( "cot",    _MATH_COT_),
+        FILL_ONE_TOKEN ( "asin",   _MATH_ASIN_),
+        FILL_ONE_TOKEN ( "acos",   _MATH_ACOS_),
+        FILL_ONE_TOKEN ( "atan",   _MATH_ATAN_),
+        FILL_ONE_TOKEN ( "acot",   _MATH_ACOT_),
+        FILL_ONE_TOKEN ( "sinh",   _MATH_SINH_),
+        FILL_ONE_TOKEN ( "cosh",   _MATH_COSH_),
+        FILL_ONE_TOKEN ( "tanh",   _MATH_TANH_),
+        FILL_ONE_TOKEN ( "coth",   _MATH_COTH_),
+        FILL_ONE_TOKEN ( "exp",    _MATH_EXP_),
+        FILL_ONE_TOKEN ( "ln",     _MATH_LN_)
     };
 
 #undef FILL_ONE_TOKEN
@@ -49,11 +70,14 @@ Tree_t* Create_Tree_from_disk(const char* input_file_name) {
     Stack_str* token_stk = Create_token_stack(str);
     
     SAFE_CALLOC(tree, 1, Tree_t);
-    DISK(tree) = disk_buf;
+
+    TREE_TKN(tree) = token_stk;
     // ROOT(tree) = 
     
     Stack_Dtor(token_stk);
+
     free(str);
+    free(disk_buf);
     
     return tree;
 }
@@ -140,7 +164,7 @@ size_t Fill_token_stack (char* str, Stack_str* token_stk) {
         {
             if ( strncmp(str, Token_Info_Arr[cur_tok].key_word, Token_Info_Arr[cur_tok].len) == 0 )
             {
-                token_arr->code          = Token_Info_Arr[cur_tok].code;
+                TKN_CODE(token_arr)      = Token_Info_Arr[cur_tok].code;
                 token_arr->lex_info.pos  = str - str_at_start;
                 token_arr->lex_info.line = line_num;
                 
@@ -149,7 +173,7 @@ size_t Fill_token_stack (char* str, Stack_str* token_stk) {
             }
         }
 
-        if (token_arr->code != _UNDEF_TOKEN_)
+        if (TKN_CODE(token_arr) != _UNDEF_TOKEN_)
         {
             NEXT_TOKEN;
             continue;
@@ -170,8 +194,8 @@ size_t Fill_token_stack (char* str, Stack_str* token_stk) {
             return 0;
         }
 
-        token_arr->name          = id_name;
-        token_arr->lex_info.pos  =  str - str_at_start;
+        TKN_NAME(token_arr)      = id_name;
+        token_arr->lex_info.pos  = str - str_at_start;
         token_arr->lex_info.line = line_num;
         
         NEXT_TOKEN;

@@ -7,13 +7,14 @@
 #include "tree.h"
 #include "utils.h"
 #include "verify.h"
+#include "stack.h"
 
 Tree_t* Tree_Ctor(TreeNode_t* root) {
     
     SAFE_CALLOC(tree, 1, Tree_t)
 
-    ROOT(tree) = root;
-    DISK(tree) = NULL;
+    ROOT(tree)     = root;
+    TREE_TKN(tree) = NULL;
     
     // ONDEBUG( DUMP_AFTER(tree) )
 
@@ -31,23 +32,18 @@ TreeErr_t Tree_Dtor(Tree_t* tree) {
     }
 
     Node_Dtor(ROOT(tree));
-
-    if ( DISK(tree) ) {
-        free(DISK_BUF(tree));
-        free(DISK(tree));
-    }
-
+    Stack_Dtor(TREE_TKN(tree));
+    
     free(tree);
 
     return END_WITH_SUC;
 }
 
-TreeNode_t* Node_Ctor(Data_Type type, TreeElem_t data, TreeNode_t* left_son, TreeNode_t* right_son) {
-
+TreeNode_t* Node_Ctor(TreeElem_t data, TreeNode_t* left_son, TreeNode_t* right_son) {
+    
     SAFE_CALLOC(node, 1, TreeNode_t)
 
-    DATA(node)   = data;
-    TYPE(node)   = type;
+    NODE_TKN(node) = data;
 
     LEFT(node)   = left_son;
     RIGHT(node)  = right_son;
@@ -58,19 +54,6 @@ TreeNode_t* Node_Ctor(Data_Type type, TreeElem_t data, TreeNode_t* left_son, Tre
 
     if ( RIGHT(node) )
         PARENT(right_son) = node;
-
-    return node;
-}
-
-TreeNode_t* Node_Ctor_empty(void) {
-
-    SAFE_CALLOC(node, 1, TreeNode_t)
-
-    TYPE(node)   = TYPE_UNKNOWN; 
-
-    LEFT(node)   = NULL;
-    RIGHT(node)  = NULL;
-    PARENT(node) = NULL;
 
     return node;
 }
@@ -97,7 +80,7 @@ TreeNode_t* Node_Copy(TreeNode_t* node) {
     if ( ! node)
         return NULL; 
 
-    TreeNode_t* new_node = Node_Ctor( TYPE(node), DATA(node), Node_Copy(LEFT(node)), Node_Copy(RIGHT(node)) );
+    TreeNode_t* new_node = Node_Ctor( NODE_TKN(node), Node_Copy(LEFT(node)), Node_Copy(RIGHT(node)) );
 
     if ( LEFT(new_node) )
         PARENT( LEFT(new_node) )  = new_node;

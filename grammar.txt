@@ -6,7 +6,9 @@
 <IF>    ::= "if" "(" <EXP> ")" <BLOCK>
 <ASN>   ::= <VAR> "=" <EXP>
 <EXP>   ::= <TERM> ("+" "-" <TERM>)*
-<TERM>  ::= <PRIM> ("*" "/" <PRIM>)*
-<PRIM>  ::= "(" <EXP> ")" | <NUM> | <VAR>
+<TERM>  ::= <POW> ("*" "/" <POW>)*
+<POW>   ::= <PRIM> ("^" <PRIM>)?
+<PRIM>  ::= "(" <EXP> ")" | <UNAR> | <NUM> | <VAR>
+<UNAR>  ::= ["sin" "cos" ...] "(" <EXP> ")"
 <NUM>   ::= [0-9]*
 <VAR>   ::= [_ a-z A-Z] [_ a-z A-Z 0-9]*

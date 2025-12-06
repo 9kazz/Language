@@ -60,19 +60,16 @@ Compare   Double_compare       (double num_1, double num_2);
 #define XOR(logic_1, logic_2)                                       \
     ( (logic_1) && ! (logic_2) ) || ( ! (logic_1) && (logic_2) )
 
-#define DATA(node)       node->data
-#define D_OPER(node)     node->data.oper
-#define D_NUM(node)      node->data.num
-#define D_VAR(node)      node->data.var
-#define D_VAR_VAL(node)  node->data.var->value
-#define D_VAR_NAME(node) node->data.var->name
-#define TYPE(node)       node->type
 #define LEFT(node)       node->left
 #define RIGHT(node)      node->right
 #define PARENT(node)     node->parent
+
+#define NODE_TKN(node)   node->token
+#define TKN_VAL(token)   (token)->value
+#define TKN_CODE(token)  (token)->code
+#define TKN_NAME(token)  (token)->name
+
 #define ROOT(tree)       tree->root
-#define DISK(tree)       tree->disk
-#define DISK_BUF(tree)   tree->disk->buffer
-#define DISK_SIZE(tree)  tree->disk->size
+#define TREE_TKN(tree)   tree->tokens
 
 #endif
