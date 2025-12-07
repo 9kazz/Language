@@ -4,7 +4,7 @@
 #include "types.h"
 
 
-#define FILL_ONE_TOKEN(str, code) { str, code, strlen(str) }
+#define FILL_ONE_TOKEN(str, code) { str, code, #code, strlen(str) }
 
 Token_info Token_Info_Arr[] =
 {

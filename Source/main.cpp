@@ -5,6 +5,8 @@
 #include "types.h"
 #include "lexical.h"
 #include "tree.h"
+#include "dump.h"
+#include "utils.h"
 
 FILE* TreeLog = fopen("Logfile.htm", "w");
 
@@ -16,6 +18,7 @@ int main() {
     assert(TreeLog);
 
     Tree_t* tree = Create_Tree_from_disk("disk_input.txt");
+    Graphic_Dump_Tree( ROOT(tree), "AST");
     Tree_Dtor(tree);
 
     atexit(Logfiles_close);

@@ -116,6 +116,7 @@ struct Token_str {
 struct Token_info {
     const char* key_word; 
     Token_t     code;
+    const char* enum_name;
     size_t      len;
 };
 

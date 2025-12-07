@@ -8,6 +8,8 @@
 #include "utils.h"
 #include "tree.h"
 #include "dump.h"
+#include "Tokens.h"
+#include "stack.h"
 
 #define TYPE(node)       Node_Type(node)
 
@@ -15,7 +17,8 @@
 #define RIGHT(node)      node->right
 #define ROOT(tree)       tree->root
 
-#define PRINTF_LOG(format, ...)  fprintf(output_file, format, ##__VA_ARGS__);
+#define PRINTF_OUTPUT(format, ...)  fprintf(output_file, format, ##__VA_ARGS__);
+#define PRINTF_LOG(format, ...)     fprintf(TreeLog, format, ##__VA_ARGS__);
 
 //----------------------------------------------------------------------------------------------------------------------
 
@@ -51,14 +54,14 @@ TreeErr_t Print_Tree_to_Graphviz(const TreeNode_t* root, FILE* output_file) {
     assert(root);
     assert(output_file);
 
-    PRINTF_LOG("digraph Tree {\n");
-    PRINTF_LOG("\trankdir = TB;\n");
-    PRINTF_LOG("\tnode [" SHAPE STYLE " fillcolor = red, color = darkred, width = 1, height = 1];\n");
-    PRINTF_LOG("\tedge [color = \"black\"];\n\n");
-
+    PRINTF_OUTPUT("digraph Tree {\n");
+    PRINTF_OUTPUT("\trankdir = TB;\n");
+    PRINTF_OUTPUT("\tnode [" SHAPE STYLE " fillcolor = red, color = darkred, width = 1, height = 1];\n");
+    PRINTF_OUTPUT("\tedge [color = \"black\"];\n\n");
+    
     Print_Node_to_Graphviz(root, output_file);
 
-    PRINTF_LOG("\n}\n");
+    PRINTF_OUTPUT("\n}\n");
 
     return END_WITH_SUC;
 }
@@ -79,28 +82,28 @@ TreeErr_t Print_Node_to_Graphviz(const TreeNode_t* node, FILE* output_file) {
     {
     case TYPE_OPER:
         if ( Is_Leaf_Node( (TreeNode_t*) node) == IS_LEAF ) {
-            PRINTF_LOG("\tnode_%d [label = \" { type: OPER | val: %s | ptr: %p | par: %p | {<left> 0 | <right> 0}}\", rank = %d, fillcolor = " BRIGHT_GREEN ", color = darkgreen]\n",   node, Oper_info_arr[ D_OPER(node) ].name,  node, PARENT(node), node_rank);
+            PRINTF_OUTPUT("\tnode_%d [label = \" { type: OPER | key word: '%s' | code: %s (%d) | ptr: %p | par: %p | {<left> 0 | <right> 0}}\", rank = %d, fillcolor = " BRIGHT_GREEN ", color = darkgreen]\n",   node, Token_Info_Arr[node->token->code - 1].key_word, Token_Info_Arr[node->token->code - 1].enum_name, Token_Info_Arr[node->token->code - 1].code, node, PARENT(node), node_rank);
         } else if ( RIGHT(node) == NULL && LEFT(node) != NULL) {
-            PRINTF_LOG("\tnode_%d [label = \" { type: OPER | val: %s | ptr: %p | par: %p | {<left> %p | <right> 0}}\", rank = %d, fillcolor = " BRIGHT_GREEN ", color = darkgreen]\n",  node, Oper_info_arr[ D_OPER(node) ].name,  node, PARENT(node), LEFT(node), node_rank);
+            PRINTF_OUTPUT("\tnode_%d [label = \" { type: OPER | key word: '%s' | code: %s (%d) | ptr: %p | par: %p | {<left> %p | <right> 0}}\", rank = %d, fillcolor = " BRIGHT_GREEN ", color = darkgreen]\n",  node, Token_Info_Arr[node->token->code - 1].key_word, Token_Info_Arr[node->token->code - 1].enum_name, Token_Info_Arr[node->token->code - 1].code, node, PARENT(node), LEFT(node), node_rank);
         } else {
-            PRINTF_LOG("\tnode_%d [label = \" { type: OPER | val: %s | ptr: %p | par: %p | {<left> %p | <right> %p}}\", rank = %d, fillcolor = " BRIGHT_GREEN ", color = darkgreen]\n", node, Oper_info_arr[ D_OPER(node) ].name,  node, PARENT(node), LEFT(node), RIGHT(node), node_rank);
+            PRINTF_OUTPUT("\tnode_%d [label = \" { type: OPER | key word: '%s' | code: %s (%d) | ptr: %p | par: %p | {<left> %p | <right> %p}}\", rank = %d, fillcolor = " BRIGHT_GREEN ", color = darkgreen]\n", node, Token_Info_Arr[node->token->code - 1].key_word, Token_Info_Arr[node->token->code - 1].enum_name, Token_Info_Arr[node->token->code - 1].code, node, PARENT(node), LEFT(node), RIGHT(node), node_rank);
         }
         break;
     
     case TYPE_NUM:
         if ( Is_Leaf_Node( (TreeNode_t*) node) == IS_LEAF ) {
-            PRINTF_LOG("\tnode_%d [label = \" { type: NUM | val: %lg | ptr: %p | par: %p | {<left> 0 | <right> 0}}\", rank = %d, fillcolor = " BRIGHT_BLUE ", color = darkblue]\n",   node, D_NUM(node), node, PARENT(node), node_rank);
+            PRINTF_OUTPUT("\tnode_%d [label = \" { type: NUM | val: %lg | ptr: %p | par: %p | {<left> 0 | <right> 0}}\", rank = %d, fillcolor = " BRIGHT_BLUE ", color = darkblue]\n",   node, node->token->value, node, PARENT(node), node_rank);
         } else {
-            PRINTF_LOG("\tnode_%d [label = \" { type: NUM | val: %lg | ptr: %p | par: %p | {<left> %p | <right> %p}}\", rank = %d, fillcolor = " BRIGHT_BLUE ", color = darkblue]\n", node, D_NUM(node), node, PARENT(node), LEFT(node), RIGHT(node), node_rank);
+            PRINTF_OUTPUT("\tnode_%d [label = \" { type: NUM | val: %lg | ptr: %p | par: %p | {<left> %p | <right> %p}}\", rank = %d, fillcolor = " BRIGHT_BLUE ", color = darkblue]\n", node, node->token->value, node, PARENT(node), LEFT(node), RIGHT(node), node_rank);
         }
         break;
     
     case TYPE_VAR:
         if ( Is_Leaf_Node( (TreeNode_t*) node) == IS_LEAF ) {
             
-            PRINTF_LOG("\tnode_%d [label = \" { type: VAR | val: %lg ('%s') | ptr: %p | par: %p | {<left> 0 | <right> 0}}\", rank = %d, fillcolor = " PASTEL_PINK ", color = " DARK_PINK "]\n",   node, D_VAR_VAL(node), D_VAR_NAME(node), node, PARENT(node), node_rank);
+            PRINTF_OUTPUT("\tnode_%d [label = \" { type: VAR | name: '%s' | ptr: %p | par: %p | {<left> 0 | <right> 0}}\", rank = %d, fillcolor = " PASTEL_PINK ", color = " DARK_PINK "]\n",   node, node->token->name, node, PARENT(node), node_rank);
         } else {
-            PRINTF_LOG("\tnode_%d [label = \" { type: VAR | val: %lg ('%s') | ptr: %p | par: %p | {<left> %p | <right> %p}}\", rank = %d, fillcolor = " PASTEL_PINK ", color = " DARK_PINK "]\n", node, D_VAR_VAL(node), D_VAR_NAME(node), node, LEFT(node), RIGHT(node), PARENT(node), node_rank);
+            PRINTF_OUTPUT("\tnode_%d [label = \" { type: VAR | name: '%s' | ptr: %p | par: %p | {<left> %p | <right> %p}}\", rank = %d, fillcolor = " PASTEL_PINK ", color = " DARK_PINK "]\n", node, node->token->name, node, LEFT(node), RIGHT(node), PARENT(node), node_rank);
         }
         break;
 
@@ -109,9 +112,9 @@ TreeErr_t Print_Node_to_Graphviz(const TreeNode_t* node, FILE* output_file) {
     }
 
     if (node->left) {
-        PRINTF_LOG("\tnode_%d: <left> -> node_%d [dir = both]\n", node, node->left);
+        PRINTF_OUTPUT("\tnode_%d: <left> -> node_%d [dir = both]\n", node, node->left);
     } if (node->right) {
-        PRINTF_LOG("\tnode_%d: <right> -> node_%d [dir = both]\n", node, node->right);
+        PRINTF_OUTPUT("\tnode_%d: <right> -> node_%d [dir = both]\n", node, node->right);
     }
     
     --node_rank;
@@ -121,14 +124,14 @@ TreeErr_t Print_Node_to_Graphviz(const TreeNode_t* node, FILE* output_file) {
 TreeErr_t Dump_Node_to_HTML(const TreeNode_t* node, const char* image_file_name, const char* dump_info) {
     assert(node);
 
-    fprintf(Logfile, "<pre>\n");
-    fprintf(Logfile, "\t<h2> Dump of tree (%s): </h2>\n", dump_info);
-    fprintf(Logfile, "\t<h2> <span style = \"color: blue;\"> No critical errors </span></h2>\n");
+    PRINTF_LOG("<pre>\n");
+    PRINTF_LOG("\t<h2> Dump of tree (%s): </h2>\n", dump_info);
+    PRINTF_LOG("\t<h2> <span style = \"color: blue;\"> No critical errors </span></h2>\n");
 
-    fprintf(Logfile, "\n<h3>Image:</h3>\n");
-    fprintf(Logfile, "\t<img src = %s width = \"600\" height = \"600\">\n\n", image_file_name);
+    PRINTF_LOG("\n<h3>Image:</h3>\n");
+    PRINTF_LOG("\t<img src = %s width = \"600\" height = \"600\">\n\n", image_file_name);
 
-    fprintf(Logfile, "</pre>");
+    PRINTF_LOG("</pre>");
 
     return END_WITH_SUC;
 }
@@ -136,25 +139,25 @@ TreeErr_t Dump_Node_to_HTML(const TreeNode_t* node, const char* image_file_name,
 TreeErr_t Dump_disk_buffer_html (char* disk_buffer, size_t cur_pos, size_t size_of_file) {
     assert(disk_buffer);
 
-    fprintf(Logfile, "<h1>Dump of disk_buffer</h1>\n");
+    PRINTF_LOG("<h1>Dump of disk_buffer</h1>\n");
 
-    fprintf(Logfile, "<span style = \"color: grey;\">");
+    PRINTF_LOG("<span style = \"color: grey;\">");
 
     for (size_t pos = 0; pos < cur_pos; pos++)
-        fprintf(Logfile, "%c", disk_buffer[pos]);
+        PRINTF_LOG("%c", disk_buffer[pos]);
 
-    fprintf(Logfile, "</span>");
+    PRINTF_LOG("</span>");
 
-    fprintf(Logfile, "<span style = \"color: orange;\">%d</span>", disk_buffer[cur_pos]);
+    PRINTF_LOG("<span style = \"color: orange;\">%d</span>", disk_buffer[cur_pos]);
 
-    fprintf(Logfile, "<span style = \"color: blue;\">");
+    PRINTF_LOG("<span style = \"color: blue;\">");
     
     for (size_t pos = cur_pos + 1; pos < size_of_file; pos++)
-        fprintf(Logfile, "%c", disk_buffer[pos]);
+        PRINTF_LOG("%c", disk_buffer[pos]);
 
-    fprintf(Logfile, "</span>");
+    PRINTF_LOG("</span>");
 
-    fprintf(Logfile, "</h1>\n");
+    PRINTF_LOG("</h1>\n");
 
     return END_WITH_SUC;
 }
@@ -170,7 +173,7 @@ TreeErr_t Dump_disk_buffer (char* disk_buffer, size_t cur_pos, size_t size_of_fi
     }
 
     if (disk_buffer[cur_pos] == '\0') fprintf(stdout, T_RED "0" T_RESET);
-    else                          fprintf(stdout, T_BG_YELLOW "%c" T_BG_RESET, disk_buffer[cur_pos]);
+    else                              fprintf(stdout, T_BG_YELLOW "%c" T_BG_RESET, disk_buffer[cur_pos]);
     
     for (size_t pos = cur_pos + 1; pos < size_of_file; pos++) {
         if (disk_buffer[pos] == '\0') fprintf(stdout, T_RED "0" T_RESET);
@@ -184,4 +187,5 @@ TreeErr_t Dump_disk_buffer (char* disk_buffer, size_t cur_pos, size_t size_of_fi
 
 //----------------------------------------------------------------------------------------------------------------------
 
+#undef PRINTF_OUTPUT
 #undef PRINTF_LOG
