@@ -6,7 +6,7 @@
 #include <math.h>
 
 #include "types.h"
-#include "Logfile.h"
+#include "Logfiles.h"
 #include "utils.h"
 #include "verify.h"
 
@@ -39,4 +39,21 @@ Compare Double_compare(double num_1, double num_2) {
         return LESS;
 
     return EQUAL;
+}
+
+Data_Type Node_Type(const TreeNode_t* node) {
+    assert(node);
+
+    if ( TKN_CODE(node->token) > 0 )
+        return TYPE_OPER;
+
+    
+    if ( TKN_CODE(node->token) == -1 )
+        return TYPE_VAR;
+
+    
+    if ( TKN_CODE(node->token) == -2 )
+        return TYPE_NUM;
+
+    return TYPE_UNKNOWN;
 }

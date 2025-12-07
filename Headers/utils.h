@@ -12,6 +12,7 @@ enum Func_status {
 
 size_t    skip_space           (char** str);
 Compare   Double_compare       (double num_1, double num_2);
+Data_Type Node_Type            (const TreeNode_t* node);
 
 #define SAFE_CALLOC(name, size_of_buf, el_type)                                                             \
     el_type* temp_##name = (el_type*) calloc(size_of_buf, sizeof(el_type));                                 \

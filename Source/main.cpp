@@ -6,18 +6,18 @@
 #include "lexical.h"
 #include "tree.h"
 
-FILE* Logfile = fopen("Logfile.htm", "w");
+FILE* TreeLog = fopen("Logfile.htm", "w");
 
-void Logfile_close(void) {
-    fclose(Logfile);
+void Logfiles_close(void) {
+    fclose(TreeLog);
 }
 
 int main() {
-    assert(Logfile);
+    assert(TreeLog);
 
     Tree_t* tree = Create_Tree_from_disk("disk_input.txt");
     Tree_Dtor(tree);
 
-    atexit(Logfile_close);
+    atexit(Logfiles_close);
     return 0;
 }

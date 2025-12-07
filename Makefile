@@ -1,6 +1,6 @@
 TARGET = program
 
-OBJECTS     = main.o utils.o tree.o lexical.o stack.o grammar.o
+OBJECTS     = main.o utils.o tree.o lexical.o stack.o grammar.o Tokens.o
 SOURCE_DIR  = ./Source/
 HEADERS_DIR = ./Headers/
 

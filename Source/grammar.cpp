@@ -6,7 +6,7 @@
 #include <ctype.h>
 
 #include "types.h"
-#include "Logfile.h"
+#include "Logfiles.h"
 #include "utils.h"
 #include "lexical.h"
 #include "verify.h"
