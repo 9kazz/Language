@@ -26,7 +26,7 @@
 #define CHECK_SYNTAX(token_code)                                                                                                             \
     if ( TKN_CODE(*token) != token_code)                                                                                                     \
     {                                                                                                                                        \
-        fprintf(stderr, "%s in %s:%d: Sintax error (expect: %d | got: %d)\n", __func__, __FILE__, __LINE__), token_code, TKN_CODE(*token);   \
+        fprintf(stderr, "%s in %s:%d: Sintax error (expect: %d | got: %d)\n", __func__, __FILE__, __LINE__, token_code, TKN_CODE(*token));   \
         return NULL;                                                                                                                         \
     }
 
@@ -37,9 +37,9 @@ TreeNode_t* Get_Grammar(Token_str** token) {
     assert(*token); 
     
     Token_str* token_at_start = *token;
-
+    
     TreeNode_t* result = Get_Statement(token);
-
+    
     if ( ! result)
     {                                                                                   
         fprintf(stderr, "%s in %s:%d: Sintax error\n", __func__, __FILE__, __LINE__);   
@@ -57,7 +57,7 @@ TreeNode_t* Get_Grammar(Token_str** token) {
 
     CHECK_SYNTAX(_END_PROGRAM_);
     NEXT_TOKEN;
-
+    
     *token = token_at_start;
     return result;
 }
@@ -65,13 +65,13 @@ TreeNode_t* Get_Grammar(Token_str** token) {
 TreeNode_t* Get_Statement(Token_str** token) {    
     assert( token); 
     assert(*token); 
-
+    
     TreeNode_t* statement_body = Get_Operator(token); 
     
     CHECK_SYNTAX(_END_STATEMENT_);
     Token_str* result_token = *token;
     NEXT_TOKEN;
-
+    
     return CTOR_OPER(result_token, statement_body, NULL);
 }
 
@@ -79,30 +79,28 @@ TreeNode_t* Get_Operator(Token_str** token) {
     assert( token); 
     assert(*token); 
     
-    TreeNode_t* result = NULL;
+    if ( TKN_CODE(*token + 1) == _ASSIGNMENT_)
+        return Get_Assignment(token);
+        
+    if ( TKN_CODE(*token) == _IF_)
+        return Get_If_oper(token);
 
-    switch ( TKN_CODE(*token) )
-    {
-    case _ASSIGNMENT_:  result = Get_Assignment (token);  break;
-    case _IF_:          result = Get_If_oper    (token);  break;
-    case _WHILE_:       result = Get_While_oper (token);  break;
-
-    default:            result = NULL;                    break;
-    }
-
-    return result;
+    if ( TKN_CODE(*token) == _WHILE_)
+        return Get_While_oper(token);
+    
+    return NULL;
 }
 
 TreeNode_t* Get_Block(Token_str** token) {    
     assert( token); 
     assert(*token); 
-
+    
     if ( TKN_CODE(*token) == _BEGIN_OPER_ )
     {
         NEXT_TOKEN;
-
+    
         TreeNode_t* result = Get_Statement(token);
-
+    
         if ( ! result)
         {                                                                                   
             fprintf(stderr, "%s in %s:%d: Sintax error\n", __func__, __FILE__, __LINE__);   
@@ -112,14 +110,14 @@ TreeNode_t* Get_Block(Token_str** token) {
         TreeNode_t* temp = result;
 
         while(temp) 
-        {
-            RIGHT(temp) = Get_Statement(token);
+        {    
+            RIGHT(temp) = Get_Statement(token);    
             temp = RIGHT(temp);
         }
 
         CHECK_SYNTAX(_END_OPER_);
         NEXT_TOKEN;
-
+    
         return result;
     }
 
@@ -330,3 +328,4 @@ TreeNode_t* Get_Number(Token_str** token) {
 #undef CTOR_OPER
 
 #undef NEXT_TOKEN
+#undef CHECK_SYNTAX
