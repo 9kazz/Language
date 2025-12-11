@@ -22,14 +22,6 @@ Data_Type Node_Type            (const TreeNode_t* node);
                                                                                                             \
     el_type* name = temp_##name;    
     
-#define SAFE_REALLOC(name, size_of_buf, el_type)                                                            \
-    el_type* temp_##name = (el_type*) calloc(size_of_buf, sizeof(el_type));                                 \
-                                                                                                            \
-    if (temp_##name == NULL)                                                                                \
-        fprintf(stderr, "Allocation error of " #name " in %s (%s:%d)\n", __func__, __FILE__, __LINE__);     \
-                                                                                                            \
-    el_type* name = temp_##name;    
-    
 #define SAFE_FOPEN(name, file, mode)                                                                        \
     FILE* temp_##name = fopen(file, mode);                                                                  \
                                                                                                             \

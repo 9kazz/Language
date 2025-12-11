@@ -1,24 +1,14 @@
 digraph Tree {
 	rankdir = TB;
-	node [shape = Mrecord, style = "filled",  fillcolor = red, color = darkred, width = 1, height = 1.5];
+	node [shape = Mrecord, style = "filled",  fillcolor = red, color = darkred, width = 1, height = 1];
 	edge [color = "black"];
 
-	node_112 [label = " { type: VAR | name: 'x' | ptr: 0x503000000070 | par: 0x5030000000d0 | {<left> 0 | <right> 0}}", rank = 4, fillcolor = "#ff83a0ff", color = "#a40e5eff"]
-	node_160 [label = " { type: NUM | val: 2 | ptr: 0x5030000000a0 | par: 0x5030000000d0 | {<left> 0 | <right> 0}}", rank = 4, fillcolor = "#C0C0FF", color = darkblue]
-	node_208 [label = " { type: OPER | key word: '+' | code: _MATH_ADD_ (12) | ptr: 0x5030000000d0 | par: 0x5030000001c0 | {<left> 0x503000000070 | <right> 0x5030000000a0}}", rank = 3, fillcolor = "#C0FFC0", color = darkgreen]
+	node_112 [label = " { type: VAR | name: 'x' | ptr: 0x503000000070 | par: 0x5030000000d0 | {<left> 0 | <right> 0}}", rank = 3, fillcolor = "#ff83a0ff", color = "#a40e5eff"]
+	node_160 [label = " { type: NUM | val: 2 | ptr: 0x5030000000a0 | par: 0x5030000000d0 | {<left> 0 | <right> 0}}", rank = 3, fillcolor = "#C0C0FF", color = darkblue]
+	node_208 [label = " { type: OPER | key word: '=' | code: _ASSIGNMENT_ (7) | ptr: 0x5030000000d0 | par: 0x503000000100 | {<left> 0x503000000070 | <right> 0x5030000000a0}}", rank = 2, fillcolor = "#C0FFC0", color = darkgreen]
 	node_208: <left> -> node_112 [dir = both]
 	node_208: <right> -> node_160 [dir = both]
-	node_256 [label = " { type: VAR | name: 'x' | ptr: 0x503000000100 | par: 0x503000000160 | {<left> 0 | <right> 0}}", rank = 5, fillcolor = "#ff83a0ff", color = "#a40e5eff"]
-	node_304 [label = " { type: NUM | val: 3 | ptr: 0x503000000130 | par: 0x503000000160 | {<left> 0 | <right> 0}}", rank = 5, fillcolor = "#C0C0FF", color = darkblue]
-	node_352 [label = " { type: OPER | key word: '=' | code: _ASSIGNMENT_ (7) | ptr: 0x503000000160 | par: 0x503000000190 | {<left> 0x503000000100 | <right> 0x503000000130}}", rank = 4, fillcolor = "#C0FFC0", color = darkgreen]
-	node_352: <left> -> node_256 [dir = both]
-	node_352: <right> -> node_304 [dir = both]
-	node_400 [label = " { type: OPER | key word: ';' | code: _END_STATEMENT_ (5) | ptr: 0x503000000190 | par: 0x5030000001c0 | {<left> 0x503000000160 | <right> 0}}", rank = 3, fillcolor = "#C0FFC0", color = darkgreen]
-	node_400: <left> -> node_352 [dir = both]
-	node_448 [label = " { type: OPER | key word: 'while' | code: _WHILE_ (10) | ptr: 0x5030000001c0 | par: 0x5030000001f0 | {<left> 0x5030000000d0 | <right> 0x503000000190}}", rank = 2, fillcolor = "#C0FFC0", color = darkgreen]
-	node_448: <left> -> node_208 [dir = both]
-	node_448: <right> -> node_400 [dir = both]
-	node_496 [label = " { type: OPER | key word: ';' | code: _END_STATEMENT_ (5) | ptr: 0x5030000001f0 | par: (nil) | {<left> 0x5030000001c0 | <right> 0}}", rank = 1, fillcolor = "#C0FFC0", color = darkgreen]
-	node_496: <left> -> node_448 [dir = both]
+	node_256 [label = " { type: OPER | key word: ';' | code: _END_STATEMENT_ (5) | ptr: 0x503000000100 | par: (nil) | {<left> 0x5030000000d0 | <right> 0}}", rank = 1, fillcolor = "#C0FFC0", color = darkgreen]
+	node_256: <left> -> node_208 [dir = both]
 
 }

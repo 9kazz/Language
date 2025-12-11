@@ -31,16 +31,16 @@ Tree_t* Create_Tree_from_disk(const char* input_file_name) {
 
     TREE_TKN(tree) = token_stk;
 
-    ONDEBUG(printf("String\tCode\tName\tValue\t\tLine\tPos\n");
-            for(size_t idx = 0; idx < STK_CAPACITY(token_stk); idx++) {
-                if (STK_DATA(token_stk)[idx].code > 0) {printf("%s\t", Token_Info_Arr[STK_DATA(token_stk)[idx].code - 1].key_word);}
-                else {printf("%s\t", STK_DATA(token_stk)[idx].name);}
-                printf("%d\t%s\t%lg\t", STK_DATA(token_stk)[idx].code, STK_DATA(token_stk)[idx].name, STK_DATA(token_stk)[idx].value);
-                printf("\t%d\t%d\n", STK_DATA(token_stk)[idx].lex_info.line, STK_DATA(token_stk)[idx].lex_info.pos);
-            } 
-    );
+    // printf("String\tCode\tName\tValue\t\tLine\tPos\n");
+    //         for(size_t idx = 0; idx < STK_CAPACITY(token_stk); idx++) {
+    //             if (STK_DATA(token_stk)[idx].code > 0) {printf("%s\t", Token_Info_Arr[STK_DATA(token_stk)[idx].code - 1].key_word);}
+    //             else {printf("%s\t", STK_DATA(token_stk)[idx].name);}
+    //             printf("%d\t%s\t%lg\t", STK_DATA(token_stk)[idx].code, STK_DATA(token_stk)[idx].name, STK_DATA(token_stk)[idx].value);
+    //             printf("\t%d\t%d\n", STK_DATA(token_stk)[idx].lex_info.line, STK_DATA(token_stk)[idx].lex_info.pos);
+    //         } 
     
-    ROOT(tree)     = Get_Grammar( &STK_DATA(token_stk) );
+    
+    ROOT(tree) = Get_Grammar( &STK_DATA(token_stk) );
     
     ONDEBUG(printf("String\tCode\tName\tValue\t\tLine\tPos\n");
             for(size_t idx = 0; idx < STK_CAPACITY(token_stk); idx++) {
@@ -86,7 +86,7 @@ Disk_t* Read_file_to_buffer(FILE* input_file) {
 Stack_str* Create_token_stack (char* str) {
     assert(str);
 
-    const size_t START_STACK_CAPACITY = 20;
+    const size_t START_STACK_CAPACITY = 7;
 
     Stack_str* token_stk = Stack_Ctor( START_STACK_CAPACITY );
 
@@ -95,9 +95,11 @@ Stack_str* Create_token_stack (char* str) {
     return token_stk;
 }
 
-#define NEXT_TOKEN          \
-    token_arr++ ;           \
-    STK_SIZE(token_stk)++ ; \
+#define NEXT_TOKEN                                            \
+    if (STK_SIZE(token_stk) >= STK_CAPACITY(token_stk) - 1)   \
+        Stack_Realloc(token_stk);                             \
+    STK_SIZE(token_stk)++ ;                                   \
+    token_arr = STK_DATA(token_stk) + STK_SIZE(token_stk);
 
 size_t Fill_token_stack (char* str, Stack_str* token_stk) {
     assert(str);
@@ -110,7 +112,7 @@ size_t Fill_token_stack (char* str, Stack_str* token_stk) {
 
     while (*str != '\0') 
     {   
-        line_num += skip_space(&str);
+        line_num += skip_space(&str);    
 
         for (size_t cur_tok = 0; cur_tok < TOKEN_COUNT; cur_tok++)
         {

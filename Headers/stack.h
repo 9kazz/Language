@@ -9,7 +9,8 @@
 typedef Token_str Stack_t;
 
 enum StackErr_t {
-    STK_NO_ERR = 0
+    STK_NO_ERR      = 0,
+    STK_REALLOC_ERR = 0
 };
 
 struct Stack_str {

@@ -136,51 +136,59 @@ TreeErr_t Dump_Node_to_HTML(const TreeNode_t* node, const char* image_file_name,
     return END_WITH_SUC;
 }
 
-TreeErr_t Dump_disk_buffer_html (char* disk_buffer, size_t cur_pos, size_t size_of_file) {
-    assert(disk_buffer);
+TreeErr_t Dump_Node_preorder(const TreeNode_t* node, FILE* output_file) {
+    assert(node);
+    assert(output_file);
 
-    PRINTF_LOG("<h1>Dump of disk_buffer</h1>\n");
+    static size_t offset = 0;
 
-    PRINTF_LOG("<span style = \"color: grey;\">");
+    PRINTF_OUTPUT(" ( ");
+    offset += strlen(" ( ");
 
-    for (size_t pos = 0; pos < cur_pos; pos++)
-        PRINTF_LOG("%c", disk_buffer[pos]);
+    if ( TYPE(node) == TYPE_OPER ) {
+        PRINTF_OUTPUT("\"%s\"", Token_Info_Arr[node->token->code - 1].enum_name);    
+        offset += strlen(Token_Info_Arr[node->token->code - 1].enum_name) + 2;
 
-    PRINTF_LOG("</span>");
+    } else if ( TYPE(node) == TYPE_VAR ) {
+        PRINTF_OUTPUT("\"%s\"", node->token->name);    
+        offset += strlen(node->token->name) + 2;
 
-    PRINTF_LOG("<span style = \"color: orange;\">%d</span>", disk_buffer[cur_pos]);
-
-    PRINTF_LOG("<span style = \"color: blue;\">");
+    } else if ( TYPE(node) == TYPE_NUM ) {
+        PRINTF_OUTPUT("\"%s\"", node->token->name);   
+        offset += strlen(node->token->name) + 2;
     
-    for (size_t pos = cur_pos + 1; pos < size_of_file; pos++)
-        PRINTF_LOG("%c", disk_buffer[pos]);
+    } else {
+        PRINTF_OUTPUT("\n\n!!!TYPE_UNKNOWN!!!\n\n");
+    }
 
-    PRINTF_LOG("</span>");
 
-    PRINTF_LOG("</h1>\n");
+    if (node->left) {
+        Dump_Node_preorder(node->left, output_file);
+    } else {
+        PRINTF_OUTPUT(" nil");
+    }
+
+    if (node->right) {
+        // PRINTF_OUTPUT("\n");
+        // Print_Space(offset, output_file);
+        Dump_Node_preorder(node->right, output_file);
+    } else {
+        // PRINTF_OUTPUT("\n");
+        // Print_Space(offset, output_file);
+        PRINTF_OUTPUT(" nil");
+    }
+
+    PRINTF_OUTPUT(" ) ");
+    offset += strlen(" ) ");
 
     return END_WITH_SUC;
-}
+}   
 
-TreeErr_t Dump_disk_buffer (char* disk_buffer, size_t cur_pos, size_t size_of_file) {
-    assert(disk_buffer);
-
-    fprintf(stdout, "\"");
-
-    for (size_t pos = 0; pos < cur_pos; pos++) {
-        if (disk_buffer[pos] == '\0') fprintf(stdout, T_RED "0" T_RESET);
-        else                          fprintf(stdout, T_GREY "%c" T_RESET, disk_buffer[pos]);
-    }
-
-    if (disk_buffer[cur_pos] == '\0') fprintf(stdout, T_RED "0" T_RESET);
-    else                              fprintf(stdout, T_BG_YELLOW "%c" T_BG_RESET, disk_buffer[cur_pos]);
+TreeErr_t Print_Space(size_t spaces_count, FILE* output_file) {
+    assert(output_file);
     
-    for (size_t pos = cur_pos + 1; pos < size_of_file; pos++) {
-        if (disk_buffer[pos] == '\0') fprintf(stdout, T_RED "0" T_RESET);
-        else                          fprintf(stdout, T_BRIGHT_BLUE "%c" T_RESET, disk_buffer[pos]);
-    }
-
-    fprintf(stdout, "\"\n");
+    for (size_t cur_count = 0; cur_count < spaces_count; cur_count++)
+        PRINTF_OUTPUT(" ");
 
     return END_WITH_SUC;
 }

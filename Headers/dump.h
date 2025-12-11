@@ -65,7 +65,8 @@ TreeErr_t Print_Tree_to_Graphviz    (const TreeNode_t* root, FILE* output_file);
 TreeErr_t Print_Node_to_Graphviz    (const TreeNode_t* node, FILE* output_file);
 TreeErr_t Dump_Node_to_HTML         (const TreeNode_t* node, const char* image_file_name, const char* dump_info);
 
-TreeErr_t Dump_disk_buffer_html     (char* disk_buffer, size_t cur_pos, size_t size_of_file);
-TreeErr_t Dump_disk_buffer          (char* disk_buffer, size_t cur_pos, size_t size_of_file);
+TreeErr_t Dump_Node_preorder        (const TreeNode_t* node, FILE* output_file);
+
+TreeErr_t Print_Space               (size_t spaces_count, FILE* output_file);
 
 #endif

@@ -67,12 +67,16 @@ StackErr_t Stack_Realloc(Stack_str* stack) {
 
     size_t new_capacity = 2 * STK_CAPACITY(stack);
 
-    SAFE_REALLOC(realloc_data, new_capacity, Stack_t);
+    Stack_t* stk_data_temp = (Stack_t*) realloc(STK_DATA(stack), new_capacity);
 
-    STK_DATA(stack) = realloc_data;
+    if (stk_data_temp == NULL) {                  
+        fprintf(stderr, "Reallocation error of stack in %s (%s:%d)\n", __func__, __FILE__, __LINE__); 
+        return STK_REALLOC_ERR;
+    }
 
+    STK_DATA(stack)     = stk_data_temp;
     STK_CAPACITY(stack) = new_capacity;
-    
+
     return STK_NO_ERR;
 }
 
