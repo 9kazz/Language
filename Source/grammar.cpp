@@ -68,11 +68,14 @@ TreeNode_t* Get_Statement(Token_str** token) {
     
     TreeNode_t* statement_body = Get_Operator(token); 
     
-    CHECK_SYNTAX(_END_STATEMENT_);
-    Token_str* result_token = *token;
-    NEXT_TOKEN;
+    if (statement_body)  {
+        CHECK_SYNTAX(_END_STATEMENT_);
+        Token_str* result_token = *token;
+        NEXT_TOKEN;
+        return CTOR_OPER(result_token, statement_body, NULL);
+    }
     
-    return CTOR_OPER(result_token, statement_body, NULL);
+    return NULL;
 }
 
 TreeNode_t* Get_Operator(Token_str** token) {    

@@ -141,9 +141,10 @@ TreeErr_t Dump_Node_preorder(const TreeNode_t* node, FILE* output_file) {
     assert(output_file);
 
     static size_t offset = 0;
+    size_t start_offset  = offset;
 
-    PRINTF_OUTPUT(" ( ");
-    offset += strlen(" ( ");
+    PRINTF_OUTPUT("(");
+    offset += strlen("(");
 
     if ( TYPE(node) == TYPE_OPER ) {
         PRINTF_OUTPUT("\"%s\"", Token_Info_Arr[node->token->code - 1].enum_name);    
@@ -161,7 +162,6 @@ TreeErr_t Dump_Node_preorder(const TreeNode_t* node, FILE* output_file) {
         PRINTF_OUTPUT("\n\n!!!TYPE_UNKNOWN!!!\n\n");
     }
 
-
     if (node->left) {
         Dump_Node_preorder(node->left, output_file);
     } else {
@@ -169,18 +169,19 @@ TreeErr_t Dump_Node_preorder(const TreeNode_t* node, FILE* output_file) {
     }
 
     if (node->right) {
-        // PRINTF_OUTPUT("\n");
-        // Print_Space(offset, output_file);
+        PRINTF_OUTPUT("\n");
+        Print_Space(offset, output_file);
         Dump_Node_preorder(node->right, output_file);
     } else {
-        // PRINTF_OUTPUT("\n");
-        // Print_Space(offset, output_file);
+        PRINTF_OUTPUT("\n");
+        Print_Space(offset, output_file);
         PRINTF_OUTPUT(" nil");
     }
 
-    PRINTF_OUTPUT(" ) ");
-    offset += strlen(" ) ");
+    PRINTF_OUTPUT(")");
+    offset += strlen(")");
 
+    offset = start_offset;
     return END_WITH_SUC;
 }   
 
