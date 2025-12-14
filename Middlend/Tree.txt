@@ -1,0 +1,12 @@
+("OPER _END_STATEMENT_"("OPER _WHILE_"("OPER _MATH_ADD_"("VAR x" nil
+                                                                 nil)
+                                                        ("NUM 1" nil
+                                                                 nil))
+                                      ("OPER _END_STATEMENT_"("OPER _ASSIGNMENT_"("VAR y" nil
+                                                                                          nil)
+                                                                                 ("OPER _MATH_SUB_"("NUM 5" nil
+                                                                                                            nil)
+                                                                                                   ("NUM 1" nil
+                                                                                                            nil)))
+                                                              nil))
+                        nil)

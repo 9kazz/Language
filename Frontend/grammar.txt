@@ -1,0 +1,14 @@
+<GRAM>  ::= <STAT>+ "$"
+<STAT>  ::= <OPER> ";"
+<OPER>  ::= <ASN> | <IF> | <WHILE>
+<BLOCK> ::= "{" <STAT>+ "}" | <STAT>
+<WHILE> ::= "while" "(" <EXP> ")" <BLOCK>
+<IF>    ::= "if" "(" <EXP> ")" <BLOCK>
+<ASN>   ::= <VAR> "=" <EXP>
+<EXP>   ::= <TERM> ("+" "-" <TERM>)*
+<TERM>  ::= <POW> ("*" "/" <POW>)*
+<POW>   ::= <PRIM> ("^" <PRIM>)?
+<PRIM>  ::= "(" <EXP> ")" | <UNAR> | <NUM> | <VAR>
+<UNAR>  ::= ["sin" "cos" ...] "(" <EXP> ")"
+<NUM>   ::= [0-9]*
+<VAR>   ::= [_ a-z A-Z] [_ a-z A-Z 0-9]*
