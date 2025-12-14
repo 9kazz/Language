@@ -3,7 +3,7 @@
 
 #include <stdio.h>
 
-enum Operators {
+enum Token_t {
     _UNDEF_TOKEN_       =  0,
 //-------------------------------------
     _OPEN_BRACK_        =  1,
@@ -76,9 +76,9 @@ typedef NodeData_t TreeElem_t;
 typedef int        TreeErr_t;
 
 union NodeData_t {
-    Operators oper;
-    double    num;
-    char*     identifier;
+    Token_t oper;
+    double  num;
+    char*   identifier;
 };
 
 struct TreeNode_t {

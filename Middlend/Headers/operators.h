@@ -5,9 +5,11 @@
 
 #include "types.h"
 
-struct Oper_info {
-    Operators   code;
+struct Token_info {
+    const char* key_word; 
+    Token_t     code;
     const char* enum_name;
+    size_t      len;
 };
 
 struct Type_Info {
@@ -15,7 +17,7 @@ struct Type_Info {
     Data_Type   type;
 };
 
-extern Oper_info Oper_Info_Arr[];
+extern Token_info Token_Info_Arr[];
 extern size_t     OPER_COUNT;
 
 extern Type_Info  Type_Arr[];
@@ -23,6 +25,6 @@ extern size_t     TYPES_COUNT;
 
 //------------------------------------------------------------------
 
-Operators Find_Oper(char* oper_name);
+Token_t Find_Oper(char* oper_name);
 
 #endif

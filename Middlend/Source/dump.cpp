@@ -88,11 +88,11 @@ TreeErr_t Print_Node_to_Graphviz(const TreeNode_t* node, FILE* output_file) {
     {
     case TYPE_OPER:
         if ( Is_Leaf_Node( (TreeNode_t*) node) == IS_LEAF ) {
-            PRINTF_OUTPUT("\tnode_%d [label = \" { type: OPER | code: %s (%d) | ptr: %p | par: %p | {<left> 0 | <right> 0}}\", rank = %d, fillcolor = " BRIGHT_GREEN ", color = darkgreen]\n",   node, Oper_Info_Arr[node->data.oper - 1].enum_name, Oper_Info_Arr[node->data.oper - 1].code, node, PARENT(node), node_rank);
+            PRINTF_OUTPUT("\tnode_%d [label = \" { type: OPER | key word: '%s' | code: %s (%d) | ptr: %p | par: %p | {<left> 0 | <right> 0}}\", rank = %d, fillcolor = " BRIGHT_GREEN ", color = darkgreen]\n",   node, Token_Info_Arr[node->data.oper - 1].key_word, Token_Info_Arr[node->data.oper - 1].enum_name, Token_Info_Arr[node->data.oper - 1].code, node, PARENT(node), node_rank);
         } else if ( RIGHT(node) == NULL && LEFT(node) != NULL) {
-            PRINTF_OUTPUT("\tnode_%d [label = \" { type: OPER | code: %s (%d) | ptr: %p | par: %p | {<left> %p | <right> 0}}\", rank = %d, fillcolor = " BRIGHT_GREEN ", color = darkgreen]\n",   node, Oper_Info_Arr[node->data.oper - 1].enum_name, Oper_Info_Arr[node->data.oper - 1].code, node, PARENT(node), LEFT(node), node_rank);
+            PRINTF_OUTPUT("\tnode_%d [label = \" { type: OPER | key word: '%s' | code: %s (%d) | ptr: %p | par: %p | {<left> %p | <right> 0}}\", rank = %d, fillcolor = " BRIGHT_GREEN ", color = darkgreen]\n",  node, Token_Info_Arr[node->data.oper - 1].key_word, Token_Info_Arr[node->data.oper - 1].enum_name, Token_Info_Arr[node->data.oper - 1].code, node, PARENT(node), LEFT(node), node_rank);
         } else {
-            PRINTF_OUTPUT("\tnode_%d [label = \" { type: OPER | code: %s (%d) | ptr: %p | par: %p | {<left> %p | <right> %p}}\", rank = %d, fillcolor = " BRIGHT_GREEN ", color = darkgreen]\n",   node, Oper_Info_Arr[node->data.oper - 1].enum_name, Oper_Info_Arr[node->data.oper - 1].code, node, PARENT(node), LEFT(node), RIGHT(node), node_rank);
+            PRINTF_OUTPUT("\tnode_%d [label = \" { type: OPER | key word: '%s' | code: %s (%d) | ptr: %p | par: %p | {<left> %p | <right> %p}}\", rank = %d, fillcolor = " BRIGHT_GREEN ", color = darkgreen]\n", node, Token_Info_Arr[node->data.oper - 1].key_word, Token_Info_Arr[node->data.oper - 1].enum_name, Token_Info_Arr[node->data.oper - 1].code, node, PARENT(node), LEFT(node), RIGHT(node), node_rank);
         }
         break;
     
@@ -184,7 +184,7 @@ TreeErr_t Dump_Node_preorder(const TreeNode_t* node, FILE* output_file) {
     switch ( TYPE(node) )
     {
     case TYPE_OPER:
-        sprintf(Result_str, "\"OPER %s\"", Oper_Info_Arr[node->data.oper - 1].enum_name);
+        sprintf(Result_str, "\"OPER %s\"", Token_Info_Arr[node->data.oper - 1].enum_name);
         break;
     
     case TYPE_NUM:
