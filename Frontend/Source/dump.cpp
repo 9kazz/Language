@@ -93,20 +93,11 @@ TreeErr_t Print_Node_to_Graphviz(const TreeNode_t* node, FILE* output_file) {
         break;
     
     case TYPE_NUM:
-        if ( Is_Leaf_Node( (TreeNode_t*) node) == IS_LEAF ) {
-            PRINTF_OUTPUT("\tnode_%d [label = \" { type: NUM | val: %lg | ptr: %p | par: %p | {<left> 0 | <right> 0}}\", rank = %d, fillcolor = " BRIGHT_BLUE ", color = darkblue]\n",   node, node->token->value, node, PARENT(node), node_rank);
-        } else {
-            PRINTF_OUTPUT("\tnode_%d [label = \" { type: NUM | val: %lg | ptr: %p | par: %p | {<left> %p | <right> %p}}\", rank = %d, fillcolor = " BRIGHT_BLUE ", color = darkblue]\n", node, node->token->value, node, PARENT(node), LEFT(node), RIGHT(node), node_rank);
-        }
+        PRINTF_OUTPUT("\tnode_%d [label = \" { type: NUM | val: %lg | ptr: %p | par: %p | {<left> 0 | <right> 0}}\", rank = %d, fillcolor = " BRIGHT_BLUE ", color = darkblue]\n",   node, node->token->value, node, PARENT(node), node_rank);
         break;
     
-    case TYPE_VAR:
-        if ( Is_Leaf_Node( (TreeNode_t*) node) == IS_LEAF ) {
-            
-            PRINTF_OUTPUT("\tnode_%d [label = \" { type: VAR | name: '%s' | ptr: %p | par: %p | {<left> 0 | <right> 0}}\", rank = %d, fillcolor = " PASTEL_PINK ", color = " DARK_PINK "]\n",   node, node->token->name, node, PARENT(node), node_rank);
-        } else {
-            PRINTF_OUTPUT("\tnode_%d [label = \" { type: VAR | name: '%s' | ptr: %p | par: %p | {<left> %p | <right> %p}}\", rank = %d, fillcolor = " PASTEL_PINK ", color = " DARK_PINK "]\n", node, node->token->name, node, LEFT(node), RIGHT(node), PARENT(node), node_rank);
-        }
+    case TYPE_VAR:    
+        PRINTF_OUTPUT("\tnode_%d [label = \" { type: VAR | name: '%s' | ptr: %p | par: %p | {<left> 0 | <right> 0}}\", rank = %d, fillcolor = " PASTEL_PINK ", color = " DARK_PINK "]\n",   node, node->token->name, node, PARENT(node), node_rank);
         break;
 
     default:
@@ -149,16 +140,16 @@ TreeErr_t Dump_Node_preorder(const TreeNode_t* node, FILE* output_file) {
     offset += strlen("(");
 
     if ( TYPE(node) == TYPE_OPER ) {
-        PRINTF_OUTPUT("\"%s\"", Token_Info_Arr[node->token->code - 1].enum_name);    
-        offset += strlen(Token_Info_Arr[node->token->code - 1].enum_name) + 2;
+        PRINTF_OUTPUT("\"OPER %s\"", Token_Info_Arr[node->token->code - 1].enum_name);    
+        offset += strlen(Token_Info_Arr[node->token->code - 1].enum_name) + strlen("\"OPER \"");
 
     } else if ( TYPE(node) == TYPE_VAR ) {
-        PRINTF_OUTPUT("\"%s\"", node->token->name);    
-        offset += strlen(node->token->name) + 2;
+        PRINTF_OUTPUT("\"VAR %s\"", node->token->name);    
+        offset += strlen(node->token->name) + strlen("\"VAR \"");
 
     } else if ( TYPE(node) == TYPE_NUM ) {
-        PRINTF_OUTPUT("\"%s\"", node->token->name);   
-        offset += strlen(node->token->name) + 2;
+        PRINTF_OUTPUT("\"NUM %s\"", node->token->name);   
+        offset += strlen(node->token->name) + strlen("\"NUM \"");
     
     } else {
         PRINTF_OUTPUT("\n\n!!!TYPE_UNKNOWN!!!\n\n");

@@ -262,7 +262,7 @@ TreeNode_t* Get_Primary(Token_str** token) {
         return result;
     }
 
-    if ( _MATH_UNARY_START_ <= TKN_CODE(*token) && TKN_CODE(*token) >= _MATH_UNARY_END_ )
+    if ( _MATH_UNARY_START_ <= TKN_CODE(*token) && TKN_CODE(*token) <= _MATH_UNARY_END_ )
         return Get_Unary(token);
 
     if ( isdigit(TKN_NAME(*token)[0]) )

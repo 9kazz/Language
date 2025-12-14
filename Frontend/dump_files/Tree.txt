@@ -1,20 +1,13 @@
-("_END_STATEMENT_"("_ASSIGNMENT_"("x" nil
-                                      nil)
-                                 ("2" nil
-                                      nil))
-                  ("_END_STATEMENT_"("_WHILE_"("_MATH_ADD_"("x" nil
-                                                                nil)
-                                                           ("1" nil
-                                                                nil))
-                                              ("_END_STATEMENT_"("_ASSIGNMENT_"("y" nil
-                                                                                    nil)
-                                                                               ("_MATH_SUB_"("5" nil
-                                                                                                 nil)
-                                                                                            ("1" nil
-                                                                                                 nil)))
-                                                                ("_END_STATEMENT_"("_ASSIGNMENT_"("x" nil
-                                                                                                      nil)
-                                                                                                 ("0" nil
-                                                                                                      nil))
-                                                                                   nil)))
-                                     nil))
+("OPER _END_STATEMENT_"("OPER _WHILE_"("OPER _MATH_ADD_"("VAR x" nil
+                                                                 nil)
+                                                        ("NUM 1" nil
+                                                                 nil))
+                                      ("OPER _END_STATEMENT_"("OPER _ASSIGNMENT_"("VAR y" nil
+                                                                                          nil)
+                                                                                 ("OPER _MATH_POW_"("OPER _MATH_SIN_"("VAR y" nil
+                                                                                                                              nil)
+                                                                                                                      nil)
+                                                                                                   ("NUM 2" nil
+                                                                                                            nil)))
+                                                              nil))
+                        nil)
