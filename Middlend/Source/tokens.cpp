@@ -2,18 +2,23 @@
 #include <string.h>
 #include <assert.h>
 
-#include "operators.h"
+#include "tokens.h"
 
 #define FILL_ONE_TOKEN(str, code) { str, code, #code, strlen(str) }
 
 Token_info Token_Info_Arr[] =
 {
+    FILL_ONE_TOKEN ( "func",   _FUNC_INIT_),
+    FILL_ONE_TOKEN ( "var",    _VAR_INIT_),
     FILL_ONE_TOKEN ( "(",      _OPEN_BRACK_),
     FILL_ONE_TOKEN ( ")",      _CLOSE_BRACK_),
     FILL_ONE_TOKEN ( "{",      _BEGIN_OPER_),
     FILL_ONE_TOKEN ( "}",      _END_OPER_),
     FILL_ONE_TOKEN ( ";",      _END_STATEMENT_),
+    FILL_ONE_TOKEN ( ",",      _COMMA_),
     FILL_ONE_TOKEN ( "==",     _LOG_EQUAL_),
+    FILL_ONE_TOKEN ( "more",   _LOG_MORE_),
+    FILL_ONE_TOKEN ( "less",   _LOG_LESS_),
     FILL_ONE_TOKEN ( "=",      _ASSIGNMENT_),
     FILL_ONE_TOKEN ( "if",     _IF_),
     FILL_ONE_TOKEN ( "else",   _ELSE_),
@@ -47,13 +52,19 @@ Token_info Token_Info_Arr[] =
 size_t TOKEN_COUNT = sizeof(Token_Info_Arr) / sizeof(Token_Info_Arr[0]);
 
 
+#define FILL_ONE_TYPE(name) { #name, TYPE_##name}
+
 Type_Info Type_Arr[] =
 {
-    { "OPER", TYPE_OPER },
-    { "NUM",  TYPE_NUM  },
-    { "VAR",  TYPE_VAR  },
-    { "FUNC", TYPE_FUNC }
+    FILL_ONE_TYPE(OPER),
+    FILL_ONE_TYPE(NUM),
+    FILL_ONE_TYPE(VAR),
+    FILL_ONE_TYPE(FUNC),
+    FILL_ONE_TYPE(VAR_INIT),
+    FILL_ONE_TYPE(FUNC_INIT)
 };
+
+#undef FILL_ONE_TYPE
 
 size_t TYPES_COUNT = sizeof(Type_Arr) / sizeof(Type_Arr[0]);
 

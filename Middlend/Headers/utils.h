@@ -55,6 +55,10 @@ enum util_constants {
     type name;                          \
     memset(&name, 0, sizeof(name));
 
+#define XOR(logic_1, logic_2)                                       \
+    ( (logic_1) && ! (logic_2) ) || ( ! (logic_1) && (logic_2) )
+
+    
 #define DATA(node)      node->data
 #define TYPE(node)      node->type
 #define LEFT(node)      node->left

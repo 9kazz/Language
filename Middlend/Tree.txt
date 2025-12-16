@@ -1,12 +1,19 @@
-("OPER _END_STATEMENT_"("OPER _WHILE_"("OPER _MATH_ADD_"("VAR x" nil
-                                                                 nil)
-                                                        ("NUM 1" nil
-                                                                 nil))
-                                      ("OPER _END_STATEMENT_"("OPER _ASSIGNMENT_"("VAR y" nil
-                                                                                          nil)
-                                                                                 ("OPER _MATH_SUB_"("NUM 5" nil
-                                                                                                            nil)
-                                                                                                   ("NUM 1" nil
-                                                                                                            nil)))
-                                                              nil))
-                        nil)
+("OPER _END_STATEMENT_"("VAR_INIT x" nil
+                                     nil)
+                       ("OPER _END_STATEMENT_"("OPER _ASSIGNMENT_"("VAR x" nil
+                                                                           nil)
+                                                                  ("FUNC aboba"("OPER _COMMA_"("VAR a" nil
+                                                                                                       nil)
+                                                                                              ("VAR b" nil
+                                                                                                       nil))
+                                                                                nil))
+                                              ("OPER _END_STATEMENT_"("FUNC_INIT aboba"("OPER _COMMA_"("VAR a" nil
+                                                                                                               nil)
+                                                                                                      ("VAR b" nil
+                                                                                                               nil))
+                                                                                       ("OPER _END_STATEMENT_"("OPER _ASSIGNMENT_"("VAR x" nil
+                                                                                                                                           nil)
+                                                                                                                                  ("NUM 2" nil
+                                                                                                                                           nil))
+                                                                                                               nil))
+                                                                      nil)))

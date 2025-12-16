@@ -4,13 +4,14 @@
 #include <string.h>
 
 #include "Logfile.h"
+#include "optimization.h"
 #include "utils.h"
 #include "tree.h"
 #include "dump.h"
 #include "read_tree.h" 
 #include "types.h"
 
-FILE* Logfile = fopen("Logfile.htm", "w");
+FILE* Logfile = fopen("dump_files/Logfile.htm", "w");
 
 void Logfile_close(void) {
     fclose(Logfile);
@@ -19,12 +20,15 @@ void Logfile_close(void) {
 int main() {
     assert(Logfile);
 
-    Tree_t* tree_from_disk = Create_Tree_from_disk("Tree.txt");
+    Tree_t* tree = Create_Tree_from_disk("Tree.txt");
+    Graphic_Dump_Node(tree, "Tree created from disk: " __FILE__);
 
-    Graphic_Dump_Node(tree_from_disk, "Tree create from disk: " __FILE__);
-    Dump_tree_into_file( tree_from_disk->root, "dump_files/disk_output.txt");
+    ROOT(tree) = Optimization_Func( ROOT(tree) );
+    
+    Graphic_Dump_Node(tree, "Tree after optimization: " __FILE__);
+    Dump_tree_into_file( tree->root, "dump_files/disk_output.txt");
 
-    Tree_Dtor(tree_from_disk);
+    Tree_Dtor(tree);
     
     atexit(Logfile_close);
     return 0;
