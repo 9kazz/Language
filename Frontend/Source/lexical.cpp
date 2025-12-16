@@ -30,8 +30,8 @@ Tree_t* Create_Tree_from_disk(const char* input_file_name) {
     SAFE_CALLOC(tree, 1, Tree_t);
 
     TREE_TKN(tree) = token_stk;
-
-    ONDEBUG(printf("String\tCode\tName\tValue\t\tLine\tPos\n");
+    
+    ONDEBUG(printf("\nString\tCode\tName\tValue\t\tLine\tPos\n");
             for(size_t idx = 0; idx < STK_CAPACITY(token_stk); idx++) {
                 if (STK_DATA(token_stk)[idx].code > 0) {printf("%s\t", Token_Info_Arr[STK_DATA(token_stk)[idx].code - 1].key_word);}
                 else {printf("%s\t", STK_DATA(token_stk)[idx].name);}
@@ -39,7 +39,7 @@ Tree_t* Create_Tree_from_disk(const char* input_file_name) {
                 printf("\t%d\t%d\n", STK_DATA(token_stk)[idx].lex_info.line, STK_DATA(token_stk)[idx].lex_info.pos);
             } 
     );
-    
+
     ROOT(tree) = Get_Grammar( &STK_DATA(token_stk) );
     
     ONDEBUG(printf("\nString\tCode\tName\tValue\t\tLine\tPos\n");
@@ -86,7 +86,7 @@ Disk_t* Read_file_to_buffer(FILE* input_file) {
 Stack_str* Create_token_stack (char* str) {
     assert(str);
 
-    const size_t START_STACK_CAPACITY = 5;
+    const size_t START_STACK_CAPACITY = 25;
 
     Stack_str* token_stk = Stack_Ctor( START_STACK_CAPACITY );
 

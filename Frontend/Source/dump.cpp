@@ -99,6 +99,18 @@ TreeErr_t Print_Node_to_Graphviz(const TreeNode_t* node, FILE* output_file) {
     case TYPE_VAR:    
         PRINTF_OUTPUT("\tnode_%d [label = \" { type: VAR | name: '%s' | ptr: %p | par: %p | {<left> 0 | <right> 0}}\", rank = %d, fillcolor = " PASTEL_PINK ", color = " DARK_PINK "]\n",   node, node->token->name, node, PARENT(node), node_rank);
         break;
+    
+    case TYPE_FUNC:
+        PRINTF_OUTPUT("\tnode_%d [label = \" { type: FUNC | name: '%s' | ptr: %p | par: %p | {<left> %p | <right> 0}}\", rank = %d, fillcolor = " ORANGE ", color = " DARK_ORANGE "]\n",   node, node->token->name, node, PARENT(node), LEFT(node), node_rank);
+        break;
+
+    case TYPE_VAR_INIT:
+        PRINTF_OUTPUT("\tnode_%d [label = \" { type: VAR_INIT | name: '%s' | ptr: %p | par: %p | {<left> 0 | <right> 0}}\", rank = %d, fillcolor = " LIGHT_BROWN ", color = " DARK_BROWN "]\n",   node, node->token->name, node, PARENT(node), node_rank);
+        break;
+
+    case TYPE_FUNC_INIT:
+        PRINTF_OUTPUT("\tnode_%d [label = \" { type: FUNC_INIT | name: '%s' | ptr: %p | par: %p | {<left> %p | <right> %p}}\", rank = %d, fillcolor = " PURPLE ", color = " DARK_PURPLE "]\n",   node, node->token->name, node, PARENT(node), LEFT(node), RIGHT(node), node_rank);
+        break;
 
     default:
         break;
@@ -151,6 +163,18 @@ TreeErr_t Dump_Node_preorder(const TreeNode_t* node, FILE* output_file) {
         PRINTF_OUTPUT("\"NUM %s\"", node->token->name);   
         offset += strlen(node->token->name) + strlen("\"NUM \"");
     
+    } else if ( TYPE(node) == TYPE_FUNC ) {
+        PRINTF_OUTPUT("\"FUNC %s\"", node->token->name);   
+        offset += strlen(node->token->name) + strlen("\"FUNC \"");
+
+    } else if ( TYPE(node) == TYPE_VAR_INIT ) {
+        PRINTF_OUTPUT("\"VAR_INIT %s\"", node->token->name);   
+        offset += strlen(node->token->name) + strlen("\"VAR_INIT \"");
+
+    } else if ( TYPE(node) == TYPE_FUNC_INIT ) {
+        PRINTF_OUTPUT("\"FUNC_INIT %s\"", node->token->name);   
+        offset += strlen(node->token->name) + strlen("\"FUNC_INIT \"");
+        
     } else {
         PRINTF_OUTPUT("\n\n!!!TYPE_UNKNOWN!!!\n\n");
     }

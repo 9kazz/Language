@@ -18,6 +18,12 @@
 #define YELLOW          "\"#cdcd00ff\""
 #define PASTEL_PINK     "\"#ff83a0ff\""
 #define DARK_PINK       "\"#a40e5eff\""
+#define ORANGE          "\"#fcc95cff\""
+#define DARK_ORANGE     "\"#FF8C00\""
+#define LIGHT_BROWN     "\"#D2B48C\""
+#define DARK_BROWN      "\"#8B4513\"" 
+#define PURPLE          "\"#efa0ffff\""
+#define DARK_PURPLE     "\"#8A2BE2\""      
 
 #define T_BLUE          "\033[34m"
 #define T_BRIGHT_BLUE   "\033[36m"

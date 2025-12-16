@@ -43,17 +43,24 @@ Compare Double_compare(double num_1, double num_2) {
 
 Data_Type Node_Type(const TreeNode_t* node) {
     assert(node);
-
-    if ( TKN_CODE(node->token) > 0 )
-        return TYPE_OPER;
-
     
     if ( TKN_CODE(node->token) == -1 )
         return TYPE_VAR;
-
     
-    if ( TKN_CODE(node->token) == -2 )
+    if ( TKN_CODE(node->token) == -2 ) 
+            return TYPE_FUNC;
+
+    if ( TKN_CODE(node->token) == -3 )
         return TYPE_NUM;
+
+    if ( TKN_CODE(node->token) == 1 )
+        return TYPE_FUNC_INIT;
+
+    if ( TKN_CODE(node->token) == 2)
+        return TYPE_VAR_INIT;
+
+    if ( TKN_CODE(node->token) > 2 )
+        return TYPE_OPER;
 
     return TYPE_UNKNOWN;
 }

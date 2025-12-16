@@ -93,6 +93,12 @@ TreeNode_t* Get_Operator(Token_str** token) {
     if ( TKN_CODE(*token) == _WHILE_)
         return Get_While_oper(token);
     
+    if ( TKN_CODE(*token) == _VAR_INIT_)
+        return Get_Var_Init(token);
+
+    if ( TKN_CODE(*token) == _FUNC_INIT_)
+        return Get_Func_Init(token);
+
     return NULL;
 }
 
@@ -131,6 +137,55 @@ TreeNode_t* Get_Block(Token_str** token) {
     return result;
 }
 
+TreeNode_t* Get_Func_Init(Token_str** token) {
+    assert( token);
+    assert(*token);
+
+    CHECK_SYNTAX(_FUNC_INIT_);
+    NEXT_TOKEN;
+
+    TreeNode_t* result      = Get_Identifier(token);
+    TKN_CODE(result->token) = _FUNC_INIT_;
+
+    CHECK_SYNTAX(_OPEN_BRACK_);
+    NEXT_TOKEN;
+
+    TreeNode_t* args = Get_Variable(token);
+
+    while( TKN_CODE(*token) == _COMMA_ ) 
+    {
+        Token_str* oper_token = *token;
+        NEXT_TOKEN;
+
+        TreeNode_t* right_son = Get_Variable(token);
+
+        args = CTOR_OPER(oper_token, args, right_son);          
+    }
+
+    CHECK_SYNTAX(_CLOSE_BRACK_);
+    NEXT_TOKEN;
+
+    TreeNode_t* body = Get_Block(token);
+
+    LEFT(result)  = args;
+    RIGHT(result) = body;
+
+    return result;
+}
+
+TreeNode_t* Get_Var_Init(Token_str** token) {
+    assert( token);
+    assert(*token);
+
+    CHECK_SYNTAX(_VAR_INIT_);
+    NEXT_TOKEN;
+
+    TreeNode_t* result      = Get_Variable(token);
+    TKN_CODE(result->token) = _VAR_INIT_;
+
+    return result;
+}
+
 TreeNode_t* Get_While_oper(Token_str** token) {
     assert( token);
     assert(*token);
@@ -142,7 +197,7 @@ TreeNode_t* Get_While_oper(Token_str** token) {
     CHECK_SYNTAX(_OPEN_BRACK_);
     NEXT_TOKEN;
 
-    TreeNode_t* condition = Get_Equation(token);
+    TreeNode_t* condition = Get_Logical(token);
 
     CHECK_SYNTAX(_CLOSE_BRACK_);
     NEXT_TOKEN;
@@ -163,7 +218,7 @@ TreeNode_t* Get_If_oper(Token_str** token) {
     CHECK_SYNTAX(_OPEN_BRACK_);
     NEXT_TOKEN;
 
-    TreeNode_t* condition = Get_Equation(token);
+    TreeNode_t* condition = Get_Logical(token);
 
     CHECK_SYNTAX(_CLOSE_BRACK_);
     NEXT_TOKEN;
@@ -177,18 +232,38 @@ TreeNode_t* Get_Assignment(Token_str** token) {
     assert( token);
     assert(*token);
 
-    TreeNode_t* left_hand_side = Get_Variable(token);
+    TreeNode_t* left_hand_side = Get_Identifier(token);
 
     CHECK_SYNTAX(_ASSIGNMENT_);
     Token_str* result_token = *token;
     NEXT_TOKEN;
 
-    TreeNode_t* right_hand_side = Get_Equation(token);
+    TreeNode_t* right_hand_side = Get_Logical(token);
 
     return CTOR_OPER(result_token, left_hand_side, right_hand_side);
 }
 
-TreeNode_t* Get_Equation(Token_str** token) {
+TreeNode_t* Get_Logical(Token_str** token) {
+    assert( token);
+    assert(*token);   
+
+    TreeNode_t* right_son = NULL;
+    TreeNode_t* result    = Get_Expression(token);
+
+    while( TKN_CODE(*token) == _LOG_EQUAL_ || TKN_CODE(*token) == _LOG_MORE_ || TKN_CODE(*token) == _LOG_LESS_ ) 
+    {
+        Token_str* oper_token = *token;
+        NEXT_TOKEN;
+
+        TreeNode_t* right_son = Get_Expression(token);
+
+        result = CTOR_OPER(oper_token, result, right_son);          
+    }
+
+    return result;
+}
+
+TreeNode_t* Get_Expression(Token_str** token) {
     assert( token);
     assert(*token);   
 
@@ -254,7 +329,7 @@ TreeNode_t* Get_Primary(Token_str** token) {
     {
         NEXT_TOKEN;
 
-        TreeNode_t* result = Get_Equation(token);
+        TreeNode_t* result = Get_Expression(token);
 
         CHECK_SYNTAX(_CLOSE_BRACK_);
         NEXT_TOKEN;
@@ -268,7 +343,10 @@ TreeNode_t* Get_Primary(Token_str** token) {
     if ( isdigit(TKN_NAME(*token)[0]) )
         return Get_Number(token);
 
-    return Get_Variable(token);
+    if ( (*token + 1)->code == _OPEN_BRACK_ )
+        return Get_Function(token);
+        
+    return Get_Identifier(token);
 }
 
 TreeNode_t* Get_Unary(Token_str** token) {
@@ -281,27 +359,9 @@ TreeNode_t* Get_Unary(Token_str** token) {
     CHECK_SYNTAX(_OPEN_BRACK_);
     NEXT_TOKEN;
 
-    TreeNode_t* result = CTOR_OPER(oper_token, Get_Equation(token), NULL);
+    TreeNode_t* result = CTOR_OPER(oper_token, Get_Expression(token), NULL);
 
     CHECK_SYNTAX(_CLOSE_BRACK_);
-    NEXT_TOKEN;
-
-    return result;
-}
-
-TreeNode_t* Get_Variable(Token_str** token) {
-    assert( token);
-    assert(*token);
-
-    if ( TKN_CODE(*token) != _UNDEF_TOKEN_) {
-        fprintf(stderr, "%s in %s:%d: token almost determined with code %d\n", __func__, __FILE__, __LINE__, TKN_CODE(*token));
-        return NULL;
-    }
-
-    TKN_CODE(*token) = _VARIABLE_;
-    
-    TreeNode_t* result = CTOR_VAR(*token);
-
     NEXT_TOKEN;
 
     return result;
@@ -320,6 +380,65 @@ TreeNode_t* Get_Number(Token_str** token) {
     TKN_VAL(*token)  = strtod( TKN_NAME(*token), NULL);
 
     TreeNode_t* result = CTOR_NUM(*token);
+
+    NEXT_TOKEN;
+
+    return result;
+}
+
+TreeNode_t* Get_Variable(Token_str** token) {
+    assert( token);
+    assert(*token);
+
+    TreeNode_t* result      = Get_Identifier(token);
+    TKN_CODE(result->token) =  _VARIABLE_;
+    
+    return result;
+}
+
+TreeNode_t* Get_Function(Token_str** token) {
+    assert( token);
+    assert(*token);
+
+    TreeNode_t* result      = Get_Identifier(token);
+    TKN_CODE(result->token) =  _FUNCTION_;
+
+    CHECK_SYNTAX(_OPEN_BRACK_);
+    NEXT_TOKEN;
+
+    TreeNode_t* args = Get_Variable(token);
+
+    while( TKN_CODE(*token) == _COMMA_ ) 
+    {
+        Token_str* oper_token = *token;
+        NEXT_TOKEN;
+
+        TreeNode_t* right_son = Get_Variable(token);
+
+        args = CTOR_OPER(oper_token, args, right_son);          
+    }
+
+    CHECK_SYNTAX(_CLOSE_BRACK_);
+    NEXT_TOKEN;
+
+    LEFT(result)  = args;
+    RIGHT(result) = NULL;
+
+    return result;
+}
+
+TreeNode_t* Get_Identifier(Token_str** token) {
+    assert( token);
+    assert(*token);
+
+    if ( TKN_CODE(*token) != _UNDEF_TOKEN_) {
+        fprintf(stderr, "%s in %s:%d: token almost determined with code %d\n", __func__, __FILE__, __LINE__, TKN_CODE(*token));
+        return NULL;
+    }
+
+    TKN_CODE(*token) = _VARIABLE_;
+    
+    TreeNode_t* result = CTOR_VAR(*token);
 
     NEXT_TOKEN;
 

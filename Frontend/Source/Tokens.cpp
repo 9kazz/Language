@@ -7,12 +7,17 @@
 
 Token_info Token_Info_Arr[] =
 {
+    FILL_ONE_TOKEN ( "func",   _FUNC_INIT_),
+    FILL_ONE_TOKEN ( "var",    _VAR_INIT_),
     FILL_ONE_TOKEN ( "(",      _OPEN_BRACK_),
     FILL_ONE_TOKEN ( ")",      _CLOSE_BRACK_),
     FILL_ONE_TOKEN ( "{",      _BEGIN_OPER_),
     FILL_ONE_TOKEN ( "}",      _END_OPER_),
     FILL_ONE_TOKEN ( ";",      _END_STATEMENT_),
+    FILL_ONE_TOKEN ( ",",      _COMMA_),
     FILL_ONE_TOKEN ( "==",     _LOG_EQUAL_),
+    FILL_ONE_TOKEN ( "more",   _LOG_MORE_),
+    FILL_ONE_TOKEN ( "less",   _LOG_LESS_),
     FILL_ONE_TOKEN ( "=",      _ASSIGNMENT_),
     FILL_ONE_TOKEN ( "if",     _IF_),
     FILL_ONE_TOKEN ( "else",   _ELSE_),

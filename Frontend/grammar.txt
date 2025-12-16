@@ -1,14 +1,19 @@
-<GRAM>  ::= <STAT>+ "$"
-<STAT>  ::= <OPER> ";"
-<OPER>  ::= <ASN> | <IF> | <WHILE>
-<BLOCK> ::= "{" <STAT>+ "}" | <STAT>
-<WHILE> ::= "while" "(" <EXP> ")" <BLOCK>
-<IF>    ::= "if" "(" <EXP> ")" <BLOCK>
-<ASN>   ::= <VAR> "=" <EXP>
-<EXP>   ::= <TERM> ("+" "-" <TERM>)*
-<TERM>  ::= <POW> ("*" "/" <POW>)*
-<POW>   ::= <PRIM> ("^" <PRIM>)?
-<PRIM>  ::= "(" <EXP> ")" | <UNAR> | <NUM> | <VAR>
-<UNAR>  ::= ["sin" "cos" ...] "(" <EXP> ")"
-<NUM>   ::= [0-9]*
-<VAR>   ::= [_ a-z A-Z] [_ a-z A-Z 0-9]*
+<GRAM>      ::= <STAT>+ "$"
+<STAT>      ::= <OPER> ";"
+<OPER>      ::= <ASN> | <IF> | <WHILE> | <VAR_INIT> | <FUNC_INIT>
+<BLOCK>     ::= "{" <STAT>+ "}" | <STAT>
+<FUNC_INIT> ::= "func" <IDFIER> "(" <VAR> ("," <VAR>)* ")" <BLOCK>
+<VAR_INIT>  ::= "var" <IDFIER>
+<WHILE>     ::= "while" "(" <LOG> ")" <BLOCK>
+<IF>        ::= "if" "(" <LOG> ")" <BLOCK>
+<ASN>       ::= <IDFIER> "=" <LOG>
+<LOG>       ::= <EXP> ("==" ">" "<" <EXP>)*
+<EXP>       ::= <TERM> ("+" "-" <TERM>)*
+<TERM>      ::= <POW> ("*" "/" <POW>)*
+<POW>       ::= <PRIM> ("^" <PRIM>)?
+<PRIM>      ::= "(" <EXP> ")" | <UNAR> | <NUM> | <VAR> | <FUNC> /////
+<UNAR>      ::= ["sin" "cos" ...] "(" <EXP> ")"
+<NUM>       ::= [0-9]*
+<VAR>       ::= <IDFIER>
+<FUNC>      ::= <IDFIER> "(" <VAR> ("," <VAR>)* ")"
+<IDFIER>    ::= [_ a-z A-Z] [_ a-z A-Z 0-9]*
