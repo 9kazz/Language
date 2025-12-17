@@ -1,4 +1,2 @@
-var x;
-x = aboba(a,b);
-func aboba(a,b)
-    x= 2;;
+func aboba(a, b)
+    a = b + 1;;

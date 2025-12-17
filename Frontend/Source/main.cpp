@@ -9,7 +9,8 @@
 #include "utils.h"
 
 FILE* TreeLog  = fopen("dump_files/Logfile.htm", "w");
-FILE* TreeDisk = fopen("dump_files/Tree.txt", "w");
+// FILE* TreeDisk = fopen("dump_files/Tree.txt", "w");
+FILE* TreeDisk = fopen("../Backend/Tree.txt", "w");
 
 void Logfiles_close(void) {
     fclose(TreeLog);

@@ -90,6 +90,9 @@ TreeNode_t* Get_Operator(Token_str** token) {
     if ( TKN_CODE(*token) == _IF_)
         return Get_If_oper(token);
 
+    if ( TKN_CODE(*token) == _ELSE_)
+        return Get_Else_oper(token);
+
     if ( TKN_CODE(*token) == _WHILE_)
         return Get_While_oper(token);
     
@@ -226,6 +229,19 @@ TreeNode_t* Get_If_oper(Token_str** token) {
     TreeNode_t* block = Get_Block(token);
 
     return CTOR_OPER(result_token, condition, block);
+}
+
+TreeNode_t* Get_Else_oper(Token_str** token) {
+    assert( token);
+    assert(*token);
+
+    CHECK_SYNTAX(_ELSE_);
+    Token_str* result_token = *token;
+    NEXT_TOKEN;
+
+    TreeNode_t* block = Get_Block(token);
+
+    return CTOR_OPER(result_token, block, NULL);
 }
 
 TreeNode_t* Get_Assignment(Token_str** token) {

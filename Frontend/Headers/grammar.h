@@ -11,6 +11,7 @@ TreeNode_t* Get_Func_Init   (Token_str** token);
 TreeNode_t* Get_Var_Init    (Token_str** token);
 TreeNode_t* Get_While_oper  (Token_str** token);
 TreeNode_t* Get_If_oper     (Token_str** token);
+TreeNode_t* Get_Else_oper   (Token_str** token);
 TreeNode_t* Get_Assignment  (Token_str** token);
 TreeNode_t* Get_Logical     (Token_str** token);
 TreeNode_t* Get_Expression  (Token_str** token);
