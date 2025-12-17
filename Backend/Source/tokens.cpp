@@ -20,6 +20,7 @@ Token_info Token_Info_Arr[] =
     FILL_ONE_TOKEN ( "more",   _LOG_MORE_),
     FILL_ONE_TOKEN ( "less",   _LOG_LESS_),
     FILL_ONE_TOKEN ( "=",      _ASSIGNMENT_),
+    FILL_ONE_TOKEN ( "return", _RETURN_),
     FILL_ONE_TOKEN ( "if",     _IF_),
     FILL_ONE_TOKEN ( "else",   _ELSE_),
     FILL_ONE_TOKEN ( "while",  _WHILE_),

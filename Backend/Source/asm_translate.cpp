@@ -123,6 +123,12 @@ TreeNode_t* Trans_Oper(TreeNode_t* node, Stack_str* NameTable) {
 
         return node;
 
+    case _RETURN_:
+        Asm_Translate( LEFT(node), NameTable );
+        PRINT("RET\n");
+
+        return node;
+
     // case _LOG_EQUAL_:
     //     Asm_Translate( LEFT(node),  NameTable );
     //     Asm_Translate( RIGHT(node), NameTable );
@@ -157,6 +163,40 @@ TreeNode_t* Trans_Func(TreeNode_t* node, Stack_str* NameTable) {
     assert(NameTable);
     assert( TYPE(node) == TYPE_FUNC );
 
+    size_t name_table_idx = NameTable_Find_Idfier(NameTable, DATA(node).identifier);
+    size_t func_address   = NameTable->data[name_table_idx].mem_idx;
+    
+    size_t param_counter = 0;
+    Init_func_params(NameTable, LEFT(node), func_address, &param_counter);
+
+    PRINT("CALL :%s\n", DATA(node).identifier);
+
+    return node;
+}
+
+TreeNode_t* Init_func_params(Stack_str* NameTable, TreeNode_t* node, size_t func_address, size_t* param_counter) {
+    assert(node);
+    assert(param_counter);
+    assert(NameTable);
+
+    if ( Is_Leaf_Node(node) ) 
+    {
+        Asm_Translate(node, NameTable);
+
+        PRINT("PUSH %d\n", func_address + *param_counter);
+        PRINT("POPR RAX\n");
+        PRINT("POPM [RAX]\n");
+        (*param_counter)++ ;
+
+        return node;
+    }
+
+    if ( LEFT(node) )
+        Init_func_params(NameTable, LEFT(node), func_address, param_counter);
+
+    if ( RIGHT(node) )
+        Init_func_params(NameTable, RIGHT(node), func_address, param_counter);
+
     return node;
 }
 
@@ -174,10 +214,8 @@ TreeNode_t* Trans_Func_Init(TreeNode_t* node, Stack_str* NameTable) {
     PRINT("JMP :skip_func_init_%d\n", node);
     PRINT("%s:\n", DATA(node).identifier);
     Asm_Translate( RIGHT(node), Local_NameTable );
-    PRINT("RET\n");
     PRINT("skip_func_init_%d:\n", node);
 
-    // Print_NameTable(Local_NameTable);
     Stack_Dtor(Local_NameTable);
 
     return node;
