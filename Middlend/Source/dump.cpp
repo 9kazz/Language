@@ -76,14 +76,6 @@ TreeErr_t Print_Node_to_Graphviz(const TreeNode_t* node, FILE* output_file) {
         Print_Node_to_Graphviz(node->right, output_file);
     }
 
-    // if ( Is_Leaf_Node( (TreeNode_t*) node) == IS_LEAF ) {
-    //     fprintf(output_file, "\tnode_%d [label = \" { %s | anc = %p | ptr = %p | {<left> 0 | <right> 0}}\", rank = %d]\n", node, node->data, node->parent, node, node_rank);
-    // } else if (node->right == NULL && node->left != NULL) {
-    //     fprintf(output_file, "\tnode_%d [label = \" { %s | anc = %p | ptr = %p | {<left> %p | <right> 0}}\", rank = %d]\n", node, node->data, node->parent, node, node->left, node_rank);
-    // } else {
-    //     fprintf(output_file, "\tnode_%d [label = \" { %s | anc = %p | ptr = %p | {<left> %p | <right> %p}}\", rank = %d]\n", node, node->data, node->parent, node, node->left, node->right, node_rank);
-    // }
-
     switch ( TYPE(node) )
     {
     case TYPE_OPER:
