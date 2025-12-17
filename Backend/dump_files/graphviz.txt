@@ -1,0 +1,22 @@
+digraph Tree {
+	rankdir = TB;
+	node [shape = Mrecord, style = "filled",  fillcolor = "#C0FFC0", color = darkgreen, width = 1, height = 1];
+	edge [color = "darkgreen"];
+
+	node_80 [label = " { type: VAR_INIT | name: 'x' | ptr: 0x504000000050 | par: 0x504000000010 | {<left> 0 | <right> 0}}", rank = 2, fillcolor = "#D2B48C", color = "#8B4513"]
+	node_272 [label = " { type: VAR | name: 'x' | ptr: 0x504000000110 | par: 0x5040000000d0 | {<left> 0 | <right> 0}}", rank = 4, fillcolor = "#ff83a0ff", color = "#a40e5eff"]
+	node_400 [label = " { type: NUM | val: 2 | ptr: 0x504000000190 | par: 0x504000000150 | {<left> 0 | <right> 0}}", rank = 5, fillcolor = "#C0C0FF", color = darkblue]
+	node_464 [label = " { type: NUM | val: 3 | ptr: 0x5040000001d0 | par: 0x504000000150 | {<left> 0 | <right> 0}}", rank = 5, fillcolor = "#C0C0FF", color = darkblue]
+	node_336 [label = " { type: OPER | key word: '+' | code: _MATH_ADD_ (17) | ptr: 0x504000000150 | par: 0x5040000000d0 | {<left> 0x504000000190 | <right> 0x5040000001d0}}", rank = 4, fillcolor = "#C0FFC0", color = darkgreen]
+	node_336: <left> -> node_400 [dir = both]
+	node_336: <right> -> node_464 [dir = both]
+	node_208 [label = " { type: OPER | key word: '=' | code: _ASSIGNMENT_ (12) | ptr: 0x5040000000d0 | par: 0x504000000090 | {<left> 0x504000000110 | <right> 0x504000000150}}", rank = 3, fillcolor = "#C0FFC0", color = darkgreen]
+	node_208: <left> -> node_272 [dir = both]
+	node_208: <right> -> node_336 [dir = both]
+	node_144 [label = " { type: OPER | key word: ';' | code: _END_STATEMENT_ (7) | ptr: 0x504000000090 | par: 0x504000000010 | {<left> 0x5040000000d0 | <right> 0}}", rank = 2, fillcolor = "#C0FFC0", color = darkgreen]
+	node_144: <left> -> node_208 [dir = both]
+	node_16 [label = " { type: OPER | key word: ';' | code: _END_STATEMENT_ (7) | ptr: 0x504000000010 | par: (nil) | {<left> 0x504000000050 | <right> 0x504000000090}}", rank = 1, fillcolor = "#C0FFC0", color = darkgreen]
+	node_16: <left> -> node_80 [dir = both]
+	node_16: <right> -> node_144 [dir = both]
+
+}
