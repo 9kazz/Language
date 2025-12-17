@@ -1,6 +1,6 @@
 TARGET = program
 
-OBJECTS     = main.o utils.o tree.o dump.o read_tree.o verify.o tokens.o stack.o
+OBJECTS     = main.o utils.o tree.o dump.o read_tree.o verify.o tokens.o stack.o asm_translate.o
 SOURCE_DIR  = ./Source/
 HEADERS_DIR = ./Headers/
 

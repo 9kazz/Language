@@ -81,7 +81,7 @@ StackErr_t Stack_Realloc(Stack_str* stack) {
 
 //---------------------------------------------------------------------------------------------------------------------
 
-StackErr_t NameTable_Push_Func(Stack_str* stack, TreeNode_t* func_node) {
+NameTable_t NameTable_Push_Func(Stack_str* stack, TreeNode_t* func_node) {
     assert(stack);
     assert(func_node);
     assert( TYPE(func_node) == TYPE_FUNC_INIT );
@@ -97,8 +97,12 @@ StackErr_t NameTable_Push_Func(Stack_str* stack, TreeNode_t* func_node) {
         args_count = 0;
     
     } else {
-        while ( TYPE( LEFT(func_node) ) == TYPE_OPER && LEFT(func_node)->data.oper == _COMMA_ )
+        TreeNode_t* temp_node_ptr = LEFT(func_node);
+
+        while ( TYPE( temp_node_ptr ) == TYPE_OPER && temp_node_ptr->data.oper == _COMMA_ ) {
             args_count++ ;
+            temp_node_ptr = LEFT(temp_node_ptr);
+        }
     }
 
     NameTable_t func = 
@@ -109,10 +113,12 @@ StackErr_t NameTable_Push_Func(Stack_str* stack, TreeNode_t* func_node) {
         .mem_idx = idx
     };
 
-    return Stack_Push(stack, func);
+    Stack_Push(stack, func);
+    
+    return func;
 }
 
-StackErr_t NameTable_Push_Var(Stack_str* stack, TreeNode_t* var_node) {
+NameTable_t NameTable_Push_Var(Stack_str* stack, TreeNode_t* var_node) {
     assert(stack);
     assert(var_node);
     assert( TYPE(var_node) == TYPE_VAR_INIT );
@@ -130,5 +136,56 @@ StackErr_t NameTable_Push_Var(Stack_str* stack, TreeNode_t* var_node) {
         .mem_idx = idx
     };
 
-    return Stack_Push(stack, var);
+    Stack_Push(stack, var);
+
+    return var;
 }
+
+size_t NameTable_Find_Idfier(Stack_str* stack, char* name) {
+    assert(stack);
+    assert(name);
+
+    for (size_t idx = 0;  idx < STK_SIZE(stack);  idx++) 
+    {
+        if ( strcmp(name, stack->data[idx].name) == 0 )
+            return idx;
+    }
+
+    return 0;
+}
+
+#define CASE_(type)                         \
+    case type:                              \
+        fprintf(stdout, "%s\t", #type);     \
+        break;
+
+StackErr_t Print_NameTable(Stack_str* NameTable) {
+    assert(NameTable);
+
+    fprintf(stdout, "type\t\tname\targs\tmem_idx\n");
+    fprintf(stdout, "------------------------------------------\n");
+
+    for (size_t stk_idx = 0;  stk_idx < STK_SIZE(NameTable);  stk_idx++) 
+    {
+        switch (NameTable->data[stk_idx].type)
+        {
+        CASE_(TYPE_NUM);
+        CASE_(TYPE_VAR);
+        CASE_(TYPE_OPER);
+        CASE_(TYPE_FUNC);
+        CASE_(TYPE_VAR_INIT);
+        CASE_(TYPE_FUNC_INIT);
+        
+        default:
+            break;
+        }
+        
+        fprintf(stdout, "%s\t%d\t%ld\n", NameTable->data[stk_idx].name, NameTable->data[stk_idx].args, NameTable->data[stk_idx].mem_idx);
+    }
+
+    fprintf(stdout, "\n");
+
+    return STK_NO_ERR;
+}
+
+#undef CASE_

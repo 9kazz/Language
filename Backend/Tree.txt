@@ -1,9 +1,12 @@
-("OPER _END_STATEMENT_"("VAR_INIT x" nil
-                                     nil)
-                       ("OPER _END_STATEMENT_"("OPER _ASSIGNMENT_"("VAR x" nil
-                                                                           nil)
-                                                                  ("OPER _MATH_ADD_"("NUM 2" nil
+("OPER _END_STATEMENT_"("FUNC_INIT aboba"("OPER _COMMA_"("VAR a" nil
+                                                                 nil)
+                                                        ("VAR b" nil
+                                                                 nil))
+                                         ("OPER _END_STATEMENT_"("OPER _ASSIGNMENT_"("VAR a" nil
                                                                                              nil)
-                                                                                    ("NUM 3" nil
-                                                                                             nil)))
-                                               nil))
+                                                                                    ("OPER _MATH_ADD_"("VAR b" nil
+                                                                                                               nil)
+                                                                                                      ("NUM 1" nil
+                                                                                                               nil)))
+                                                                 nil))
+                        nil)

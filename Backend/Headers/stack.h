@@ -27,8 +27,10 @@ Stack_t    Stack_Pop       (Stack_str* stack);
 StackErr_t Stack_Realloc   (Stack_str* stack);
 
 //-------------------------------------------------------------------------------
-StackErr_t NameTable_Push_Func (Stack_str* stack, TreeNode_t* func_node);
-StackErr_t NameTable_Push_Var  (Stack_str* stack, TreeNode_t* var_node);
+NameTable_t NameTable_Push_Func   (Stack_str* stack, TreeNode_t* func_node);
+NameTable_t NameTable_Push_Var    (Stack_str* stack, TreeNode_t* var_node);
+size_t      NameTable_Find_Idfier (Stack_str* stack, char* name);
+StackErr_t  Print_NameTable       (Stack_str* NameTable);
 //-------------------------------------------------------------------------------
 
 #define STK_DATA(stack)      stack->data
