@@ -95,6 +95,9 @@ TreeNode_t* Get_Operator(Token_str** token) {
 
     if ( TKN_CODE(*token) == _WHILE_)
         return Get_While_oper(token);
+
+    if ( TKN_CODE(*token) == _RETURN_)
+        return Get_Return_oper(token);
     
     if ( TKN_CODE(*token) == _VAR_INIT_)
         return Get_Var_Init(token);
@@ -187,6 +190,19 @@ TreeNode_t* Get_Var_Init(Token_str** token) {
     TKN_CODE(result->token) = _VAR_INIT_;
 
     return result;
+}
+
+TreeNode_t* Get_Return_oper(Token_str** token) {
+    assert( token);
+    assert(*token);
+
+    CHECK_SYNTAX(_RETURN_);
+    Token_str* result_token = *token;
+    NEXT_TOKEN;    
+
+    TreeNode_t* value = Get_Expression(token);
+
+    return CTOR_OPER(result_token, value, NULL);   
 }
 
 TreeNode_t* Get_While_oper(Token_str** token) {

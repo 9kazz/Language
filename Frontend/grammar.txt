@@ -1,9 +1,10 @@
 <GRAM>      ::= <STAT>+ "$"
 <STAT>      ::= <OPER> ";"
-<OPER>      ::= <ASN> | <IF> | <ELSE> | <WHILE> | <VAR_INIT> | <FUNC_INIT>
+<OPER>      ::= <ASN> | <IF> | <ELSE> | <WHILE> | <RET> | <VAR_INIT> | <FUNC_INIT>
 <BLOCK>     ::= "{" <STAT>+ "}" | <STAT>
 <FUNC_INIT> ::= "func" <IDFIER> "(" <VAR> ("," <VAR>)* ")" <BLOCK>
 <VAR_INIT>  ::= "var" <IDFIER>
+<RET>       ::= "return" <EXP>
 <WHILE>     ::= "while" "(" <LOG> ")" <BLOCK>
 <IF>        ::= "if" "(" <LOG> ")" <BLOCK>
 <ELSE>      ::= "else" <BLOCK>
