@@ -1,10 +1,8 @@
-("OPER _END_STATEMENT_"("FUNC_INIT aboba"("OPER _COMMA_"("VAR a" nil
-                                                                 nil)
-                                                        ("VAR b" nil
-                                                                 nil))
-                                         ("OPER _END_STATEMENT_"("OPER _RETURN_"("OPER _MATH_ADD_"("VAR a" nil
+("OPER _END_STATEMENT_"("FUNC_INIT aboba"("VAR x" nil
+                                                  nil)
+                                         ("OPER _END_STATEMENT_"("OPER _RETURN_"("OPER _MATH_ADD_"("VAR x" nil
                                                                                                            nil)
-                                                                                                  ("VAR b" nil
+                                                                                                  ("NUM 3" nil
                                                                                                            nil))
                                                                                  nil)
                                                                  nil))
@@ -12,9 +10,14 @@
                                                             nil)
                                               ("OPER _END_STATEMENT_"("OPER _ASSIGNMENT_"("VAR x" nil
                                                                                                   nil)
-                                                                                         ("FUNC aboba"("OPER _COMMA_"("NUM 2" nil
-                                                                                                                              nil)
-                                                                                                                     ("NUM 3" nil
+                                                                                         ("NUM 2" nil
+                                                                                                  nil))
+                                                                     ("OPER _END_STATEMENT_"("OPER _ASSIGNMENT_"("VAR x" nil
+                                                                                                                         nil)
+                                                                                                                ("FUNC aboba"("VAR x" nil
+                                                                                                                                      nil)
                                                                                                                               nil))
-                                                                                                       nil))
-                                                                      nil)))
+                                                                                            ("OPER _END_STATEMENT_"("OPER _PRINT_"("VAR x" nil
+                                                                                                                                           nil)
+                                                                                                                                   nil)
+                                                                                                                    nil)))))

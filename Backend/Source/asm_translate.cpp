@@ -129,6 +129,12 @@ TreeNode_t* Trans_Oper(TreeNode_t* node, Stack_str* NameTable) {
 
         return node;
 
+    case _PRINT_:
+
+        Asm_Translate( LEFT(node), NameTable );
+
+        return node;
+
     // case _LOG_EQUAL_:
     //     Asm_Translate( LEFT(node),  NameTable );
     //     Asm_Translate( RIGHT(node), NameTable );
