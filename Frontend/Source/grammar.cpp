@@ -28,7 +28,7 @@
 #define CHECK_SYNTAX(token_code)                                                                                                                                                                        \
     if ( TKN_CODE(*token) != token_code)                                                                                                                                                                \
     {                                                                                                                                                                                                   \
-        fprintf(stderr, "%s in %s:%d:" T_RED " SINTAX ERROR " T_RESET "at line: %d index: %d (expected: %d (%s) | got: %d (%s))\n", __func__, __FILE__, __LINE__, (*token)->lex_info.line, (*token)->lex_info.line, token_code, Token_Info_Arr[token_code - 1].key_word, TKN_CODE(*token), Token_Info_Arr[TKN_CODE(*token) - 1].key_word);   \
+        fprintf(stderr, "%s in %s:%d:" T_RED " SINTAX ERROR " T_RESET "at line: %d index: %d (expected: %d (%s) | got: %d (%s))\n", __func__, __FILE__, __LINE__, (*token)->lex_info.line, (*token)->lex_info.pos, token_code, Token_Info_Arr[token_code - 1].key_word, TKN_CODE(*token), Token_Info_Arr[TKN_CODE(*token) - 1].key_word);   \
         return NULL;                                                                                                                                                                                    \
     }
 
@@ -314,7 +314,8 @@ TreeNode_t* Get_Logical(Token_str** token) {
     TreeNode_t* right_son = NULL;
     TreeNode_t* result    = Get_Expression(token);
 
-    while( TKN_CODE(*token) == _LOG_EQUAL_ || TKN_CODE(*token) == _LOG_MORE_ || TKN_CODE(*token) == _LOG_LESS_ ) 
+    while( TKN_CODE(*token) == _LOG_EQUAL_      || TKN_CODE(*token) == _LOG_MORE_        || TKN_CODE(*token) == _LOG_LESS_ ||
+           TKN_CODE(*token) == _LOG_NOT_EQUAL_  || TKN_CODE(*token) == _LOG_MORE_EQUAL_  || TKN_CODE(*token) == _LOG_LESS_EQUAL_)
     {
         Token_str* oper_token = *token;
         NEXT_TOKEN;
@@ -500,8 +501,7 @@ TreeNode_t* Get_Identifier(Token_str** token) {
         return NULL;
     }
 
-    TKN_CODE(*token) = _VARIABLE_;
-    
+    TKN_CODE(*token)   = _VARIABLE_;
     TreeNode_t* result = CTOR_VAR(*token);
 
     NEXT_TOKEN;

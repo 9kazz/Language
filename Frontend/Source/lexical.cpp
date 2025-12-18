@@ -31,10 +31,10 @@ Tree_t* Create_Tree_from_disk(const char* input_file_name) {
 
     TREE_TKN(tree) = token_stk;
     
-    ONDEBUG(printf("\nString\tCode\tName\tValue\t\tLine\tPos\n");
+    ONDEBUG(printf("\nString\t\t\tCode\tName\tValue\t\tLine\tPos\n");
             for(size_t idx = 0; idx < STK_CAPACITY(token_stk); idx++) {
-                if (STK_DATA(token_stk)[idx].code > 0) {printf("%s\t", Token_Info_Arr[STK_DATA(token_stk)[idx].code - 1].key_word);}
-                else {printf("%s\t", STK_DATA(token_stk)[idx].name);}
+                if (STK_DATA(token_stk)[idx].code > 0) {printf("%s\t\t\t", Token_Info_Arr[STK_DATA(token_stk)[idx].code - 1].key_word);}
+                else {printf("%s\t\t\t", STK_DATA(token_stk)[idx].name);}
                 printf("%d\t%s\t%lg\t", STK_DATA(token_stk)[idx].code, STK_DATA(token_stk)[idx].name, STK_DATA(token_stk)[idx].value);
                 printf("\t%d\t%d\n", STK_DATA(token_stk)[idx].lex_info.line, STK_DATA(token_stk)[idx].lex_info.pos);
             } 
@@ -42,10 +42,10 @@ Tree_t* Create_Tree_from_disk(const char* input_file_name) {
 
     ROOT(tree) = Get_Grammar( &STK_DATA(token_stk) );
     
-    ONDEBUG(printf("\nString\tCode\tName\tValue\t\tLine\tPos\n");
+    ONDEBUG(printf("\nString\t\t\tCode\tName\tValue\t\tLine\tPos\n");
             for(size_t idx = 0; idx < STK_CAPACITY(token_stk); idx++) {
-                if (STK_DATA(token_stk)[idx].code > 0) {printf("%s\t", Token_Info_Arr[STK_DATA(token_stk)[idx].code - 1].key_word);}
-                else {printf("%s\t", STK_DATA(token_stk)[idx].name);}
+                if (STK_DATA(token_stk)[idx].code > 0) {printf("%s\t\t\t", Token_Info_Arr[STK_DATA(token_stk)[idx].code - 1].key_word);}
+                else {printf("%s\t\t\t", STK_DATA(token_stk)[idx].name);}
                 printf("%d\t%s\t%lg\t", STK_DATA(token_stk)[idx].code, STK_DATA(token_stk)[idx].name, STK_DATA(token_stk)[idx].value);
                 printf("\t%d\t%d\n", STK_DATA(token_stk)[idx].lex_info.line, STK_DATA(token_stk)[idx].lex_info.pos);
             } 
@@ -86,7 +86,7 @@ Disk_t* Read_file_to_buffer(FILE* input_file) {
 Stack_str* Create_token_stack (char* str) {
     assert(str);
 
-    const size_t START_STACK_CAPACITY = 25;
+    const size_t START_STACK_CAPACITY = 50;
 
     Stack_str* token_stk = Stack_Ctor( START_STACK_CAPACITY );
 
@@ -134,7 +134,8 @@ size_t Fill_token_stack (char* str, Stack_str* token_stk) {
         }
 
         size_t id_len = 0;
-        while (isalpha(*(str + id_len)) || isdigit(*(str + id_len)) || *(str + id_len) == '_')
+        while (isalpha(*(str + id_len)) || isdigit(*(str + id_len)) ||
+               *(str + id_len) == '_'   || *(str + id_len) == '#')
         {
             id_len++ ;
         }
