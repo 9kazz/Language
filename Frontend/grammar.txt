@@ -1,21 +1,22 @@
 <GRAM>      ::= <STAT>+ "$"
 <STAT>      ::= <OPER> ";"
-<OPER>      ::= <ASN> | <IF> | <ELSE> | <WHILE> | <RET> | <VAR_INIT> | <FUNC_INIT>
+<OPER>      ::= <ASN> | <IF> | <ELSE> | <WHILE> | <RET> | <PRINT> | <VAR_INIT> | <FUNC_INIT>
 <BLOCK>     ::= "{" <STAT>+ "}" | <STAT>
 <FUNC_INIT> ::= "func" <IDFIER> "(" <VAR> ("," <VAR>)* ")" <BLOCK>
 <VAR_INIT>  ::= "var" <IDFIER>
 <RET>       ::= "return" <EXP>
+<PRINT>     ::= "print" "(" <EXP> ")"
 <WHILE>     ::= "while" "(" <LOG> ")" <BLOCK>
 <IF>        ::= "if" "(" <LOG> ")" <BLOCK>
 <ELSE>      ::= "else" <BLOCK>
-<ASN>       ::= <IDFIER> "=" <LOG>
+<ASN>       ::= (<IDFIER> | <VAR_INIT) "=" <LOG>
 <LOG>       ::= <EXP> ("==" ">" "<" <EXP>)*
 <EXP>       ::= <TERM> ("+" "-" <TERM>)*
 <TERM>      ::= <POW> ("*" "/" <POW>)*
 <POW>       ::= <PRIM> ("^" <PRIM>)?
-<PRIM>      ::= "(" <EXP> ")" | <UNAR> | <NUM> | <VAR> | <FUNC> /////
+<PRIM>      ::= "(" <EXP> ")" | <UNAR> | <NUM> | <VAR> | <FUNC> 
 <UNAR>      ::= ["sin" "cos" ...] "(" <EXP> ")"
 <NUM>       ::= [0-9]*
 <VAR>       ::= <IDFIER>
-<FUNC>      ::= <IDFIER> "(" <VAR> ("," <VAR>)* ")"
+<FUNC>      ::= <IDFIER> "(" <EXP> ("," <EXP>)* ")"
 <IDFIER>    ::= [_ a-z A-Z] [_ a-z A-Z 0-9]*

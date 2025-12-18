@@ -10,6 +10,7 @@ TreeNode_t* Get_Block       (Token_str** token);
 TreeNode_t* Get_Func_Init   (Token_str** token);
 TreeNode_t* Get_Var_Init    (Token_str** token);
 TreeNode_t* Get_Return_oper (Token_str** token);
+TreeNode_t* Get_Print_oper  (Token_str** token);
 TreeNode_t* Get_While_oper  (Token_str** token);
 TreeNode_t* Get_If_oper     (Token_str** token);
 TreeNode_t* Get_Else_oper   (Token_str** token);

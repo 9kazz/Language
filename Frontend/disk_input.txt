@@ -1,4 +1,11 @@
-func aboba(a, b) {
-    a = b + 1;
-    return a;
+var x = 13;
+var y = 7;
+
+y = y * x;
+
+while (y less 100)
+{
+    y = y + 1;
 };
+
+print(x);

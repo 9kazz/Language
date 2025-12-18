@@ -99,6 +99,9 @@ TreeNode_t* Get_Operator(Token_str** token) {
     if ( TKN_CODE(*token) == _RETURN_)
         return Get_Return_oper(token);
     
+    if ( TKN_CODE(*token) == _PRINT_)
+        return Get_Print_oper(token);
+    
     if ( TKN_CODE(*token) == _VAR_INIT_)
         return Get_Var_Init(token);
 
@@ -189,6 +192,16 @@ TreeNode_t* Get_Var_Init(Token_str** token) {
     TreeNode_t* result      = Get_Variable(token);
     TKN_CODE(result->token) = _VAR_INIT_;
 
+    if ( TKN_CODE(*token) == _ASSIGNMENT_ )
+    {
+        Token_str* result_token = *token;
+        NEXT_TOKEN;   
+
+        TreeNode_t* right_hand_side = Get_Logical(token);
+
+        result = CTOR_OPER(result_token, result, right_hand_side);
+    }
+
     return result;
 }
 
@@ -201,6 +214,25 @@ TreeNode_t* Get_Return_oper(Token_str** token) {
     NEXT_TOKEN;    
 
     TreeNode_t* value = Get_Expression(token);
+
+    return CTOR_OPER(result_token, value, NULL);   
+}
+
+TreeNode_t* Get_Print_oper(Token_str** token) {
+    assert( token);
+    assert(*token);
+
+    CHECK_SYNTAX(_PRINT_);
+    Token_str* result_token = *token;
+    NEXT_TOKEN;    
+
+    CHECK_SYNTAX(_OPEN_BRACK_);
+    NEXT_TOKEN;
+
+    TreeNode_t* value = Get_Expression(token);
+
+    CHECK_SYNTAX(_CLOSE_BRACK_);
+    NEXT_TOKEN;
 
     return CTOR_OPER(result_token, value, NULL);   
 }
@@ -438,14 +470,14 @@ TreeNode_t* Get_Function(Token_str** token) {
     CHECK_SYNTAX(_OPEN_BRACK_);
     NEXT_TOKEN;
 
-    TreeNode_t* args = Get_Variable(token);
+    TreeNode_t* args = Get_Expression(token);
 
     while( TKN_CODE(*token) == _COMMA_ ) 
     {
         Token_str* oper_token = *token;
         NEXT_TOKEN;
 
-        TreeNode_t* right_son = Get_Variable(token);
+        TreeNode_t* right_son = Get_Expression(token);
 
         args = CTOR_OPER(oper_token, args, right_son);          
     }
