@@ -17,10 +17,14 @@ Token_info Token_Info_Arr[] =
     FILL_ONE_TOKEN ( ";",      _END_STATEMENT_),
     FILL_ONE_TOKEN ( ",",      _COMMA_),
     FILL_ONE_TOKEN ( "==",     _LOG_EQUAL_),
+    FILL_ONE_TOKEN ( "!=",     _LOG_NOT_EQUAL_),
+    FILL_ONE_TOKEN ( "more=",  _LOG_MORE_EQUAL_),
+    FILL_ONE_TOKEN ( "less=",  _LOG_LESS_EQUAL_),
     FILL_ONE_TOKEN ( "more",   _LOG_MORE_),
     FILL_ONE_TOKEN ( "less",   _LOG_LESS_),
     FILL_ONE_TOKEN ( "=",      _ASSIGNMENT_),
     FILL_ONE_TOKEN ( "return", _RETURN_),
+    FILL_ONE_TOKEN ( "print" , _PRINT_),
     FILL_ONE_TOKEN ( "if",     _IF_),
     FILL_ONE_TOKEN ( "else",   _ELSE_),
     FILL_ONE_TOKEN ( "while",  _WHILE_),
@@ -47,6 +51,7 @@ Token_info Token_Info_Arr[] =
     FILL_ONE_TOKEN ( "exp",    _MATH_EXP_),
     FILL_ONE_TOKEN ( "ln",     _MATH_LN_)
 };
+
 
 #undef FILL_ONE_TOKEN
 
