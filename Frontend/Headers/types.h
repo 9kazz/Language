@@ -51,7 +51,9 @@ enum Token_t {
     _MATH_COTH_         = 39,
     _MATH_EXP_          = 40,
     _MATH_LN_           = 41,
-    _MATH_UNARY_END_    = 41
+    _MATH_UNARY_END_    = 41,
+
+    _DRAW_              = 42
 };
 
 enum Data_Type {
