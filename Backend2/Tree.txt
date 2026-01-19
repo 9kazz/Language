@@ -1,0 +1,23 @@
+("OPER _END_STATEMENT_"("FUNC_INIT A"("OPER _COMMA_"("OPER _COMMA_"("VAR_INIT a1" nil
+                                                                                  nil)
+                                                                   ("VAR_INIT a2" nil
+                                                                                  nil))
+                                                    ("VAR_INIT a3" nil
+                                                                   nil))
+                                     ("OPER _END_STATEMENT_"("VAR_INIT ax" nil
+                                                                           nil)
+                                                             nil))
+                       ("OPER _END_STATEMENT_"("FUNC_INIT B"("OPER _COMMA_"("VAR_INIT b1" nil
+                                                                                          nil)
+                                                                           ("VAR_INIT b2" nil
+                                                                                          nil))
+                                                            ("OPER _END_STATEMENT_"("VAR_INIT bx1" nil
+                                                                                                   nil)
+                                                                                   ("OPER _END_STATEMENT_"("VAR_INIT bx2" nil
+                                                                                                                          nil)
+                                                                                                           nil)))
+                                              ("OPER _END_STATEMENT_"("VAR_INIT y1" nil
+                                                                                    nil)
+                                                                     ("OPER _END_STATEMENT_"("VAR_INIT y2" nil
+                                                                                                           nil)
+                                                                                             nil))))
