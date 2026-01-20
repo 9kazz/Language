@@ -71,6 +71,11 @@ enum is_nil {
     IS_NIL  = 1
 };
 
+enum direction {
+    BACK    = 0,
+    FORWARD = 1
+};
+
 enum Data_Type {
     TYPE_UNKNOWN   = 0, 
     TYPE_OPER      = 1,

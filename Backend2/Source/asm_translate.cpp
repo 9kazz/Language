@@ -112,13 +112,17 @@ TreeNode_t* Asm_Translate_Oper(TreeNode_t* cur_node, Fstack_str* func_NameTable,
         PRINT("PUSH 0 ; if\n");
         Asm_Translate( LEFT(cur_node), func_NameTable, var_NameTable );
 
-        PRINT("JE :if_%d\n", cur_node);
+        PRINT("JE :if_false%d\n", cur_node);
+        PRINT("OUT\n");
+        PRINT("OUT\n");
 
         Asm_Translate( RIGHT(cur_node), func_NameTable, var_NameTable );
 
-        PRINT("if_%d:\n", cur_node);
+        PRINT("JMP :if_true%d\n", cur_node);
+        PRINT("if_false%d:\n", cur_node);
         PRINT("OUT\n");
         PRINT("OUT\n");
+        PRINT("if_true%d:\n", cur_node);
 
         return cur_node;
 
@@ -142,6 +146,7 @@ TreeNode_t* Asm_Translate_Oper(TreeNode_t* cur_node, Fstack_str* func_NameTable,
 
     case _RETURN_:
         Asm_Translate( LEFT(cur_node), func_NameTable, var_NameTable );
+        PRINT("RET\n");
         return cur_node;
 
     case _PRINT_:
@@ -189,20 +194,19 @@ TreeNode_t* Asm_Translate_Func_Init(TreeNode_t* func_decl_node, Fstack_str* func
 
     Asm_Translate( RIGHT(func_decl_node), func_NameTable, loc_var_NameTable);
 
-    size_t vars_amount_in_cur_func = 0;
+    // size_t vars_amount_in_cur_func = 0;
 
-    if ( STK_DATA(func_NameTable)[0].vars_stk == var_NameTable ) {
-        vars_amount_in_cur_func = INIT_MAIN_VARS_COUNT;    
-    } else {
-        vars_amount_in_cur_func = STK_SIZE(var_NameTable);
-    }
+    // if ( STK_DATA(func_NameTable)[0].vars_stk == var_NameTable ) {
+    //     vars_amount_in_cur_func = INIT_MAIN_VARS_COUNT;    
+    // } else {
+    //     vars_amount_in_cur_func = STK_SIZE(var_NameTable);
+    // }
     
-    PRINT("PUSHR RAX ; call func [%s]\n", DATA(func_decl_node).identifier);
-    PRINT("PUSH %d ; count of vars in cur func\n", vars_amount_in_cur_func);
-    PRINT("SUB\n");
-    PRINT("POPR RAX ; new RAM pointer\n");
+    // PRINT("PUSHR RAX ; call func [%s]\n", DATA(func_decl_node).identifier);
+    // PRINT("PUSH %d ; count of vars in cur func\n", vars_amount_in_cur_func);
+    // PRINT("SUB\n");
+    // PRINT("POPR RAX ; new RAM pointer\n");
 
-    PRINT("RET\n");
     PRINT("skip_func_init_%s:\n", DATA(func_decl_node).identifier);
 
     return func_decl_node;
@@ -239,19 +243,16 @@ TreeNode_t* Asm_Translate_Func_Call(TreeNode_t* func_call_node, Fstack_str* func
     assert(var_NameTable);
     assert( TYPE(func_call_node) == TYPE_FUNC );
 
-    size_t func_NT_idx = Find_Func_in_NameTable(func_NameTable, DATA(func_call_node).identifier);
-
-    Relocate_RAM_ptr(func_call_node, func_NameTable, var_NameTable);
-
-    size_t param_counter = 0;
-    Init_Func_Params( LEFT(func_call_node), func_NameTable, var_NameTable, &param_counter);
+    Init_Func_Params(func_call_node, func_NameTable, var_NameTable);
 
     PRINT("CALL :%s ; function call\n", DATA(func_call_node).identifier);
+
+    Relocate_RAM_ptr(BACK, func_call_node, func_NameTable, var_NameTable);
 
     return func_call_node; 
 }
 
-size_t Relocate_RAM_ptr(TreeNode_t* node, Fstack_str* func_NameTable, Vstack_str* var_NameTable) {
+size_t Relocate_RAM_ptr(direction reloc_dir, TreeNode_t* node, Fstack_str* func_NameTable, Vstack_str* var_NameTable) {
     assert(node);
     assert(func_NameTable);
     assert(var_NameTable); 
@@ -266,41 +267,85 @@ size_t Relocate_RAM_ptr(TreeNode_t* node, Fstack_str* func_NameTable, Vstack_str
     
     PRINT("PUSHR RAX ; call func [%s]\n", DATA(node).identifier);
     PRINT("PUSH %d ; count of vars in cur func\n", vars_amount_in_cur_func);
-    PRINT("ADD\n");
+
+    if (reloc_dir == FORWARD) {
+        PRINT("ADD\n");
+    } else {
+        PRINT("SUB\n");
+    }
+
     PRINT("POPR RAX ; new RAM pointer\n");
 
     return vars_amount_in_cur_func;
 }
 
-TreeNode_t* Init_Func_Params(TreeNode_t* cur_node, Fstack_str* func_NameTable, Vstack_str* var_NameTable, size_t* param_counter) {
+// TreeNode_t* Init_Func_Params(TreeNode_t* cur_node, Fstack_str* func_NameTable, Vstack_str* var_NameTable, size_t* param_counter) {
+//     assert(func_NameTable);
+//     assert(var_NameTable);
+//     assert(param_counter);
+
+//     if ( ! cur_node )
+//         return NULL;
+
+//     if ( TYPE(cur_node) != TYPE_OPER || DATA(cur_node).oper != _COMMA_ ) 
+//     {
+//         Asm_Translate(cur_node, func_NameTable, var_NameTable);
+
+//         PRINT("PUSHR RAX ; %d parametr\n", *param_counter);
+//         PRINT("PUSH %d\n", *param_counter);
+//         PRINT("ADD\n");
+//         PRINT("POPR RBX\n");
+//         PRINT("POPM [RBX]\n");
+
+//         (*param_counter)++ ;
+//         return cur_node;
+//     }
+
+//     if ( LEFT(cur_node) )
+//         Init_Func_Params(LEFT(cur_node), func_NameTable, var_NameTable, param_counter);
+
+//     if ( RIGHT(cur_node) )
+//         Init_Func_Params(RIGHT(cur_node), func_NameTable, var_NameTable, param_counter);
+
+//     return cur_node;
+// }
+
+TreeNode_t* Init_Func_Params(TreeNode_t* func_call_node, Fstack_str* func_NameTable, Vstack_str* var_NameTable) {
+    assert(func_call_node);
     assert(func_NameTable);
     assert(var_NameTable);
-    assert(param_counter);
+    assert( TYPE(func_call_node) == TYPE_FUNC );
 
-    if ( ! cur_node )
+    if ( ! LEFT(func_call_node) )
         return NULL;
 
-    if ( TYPE(cur_node) != TYPE_OPER or DATA(cur_node).oper != _COMMA_ ) 
-    {
-        Asm_Translate(cur_node, func_NameTable, var_NameTable);
+    size_t      param_counter = 1;
+    TreeNode_t* temp_node_ptr = LEFT(func_call_node);
 
-        PRINT("PUSHR RAX ; %d parametr\n", *param_counter);
-        PRINT("PUSH %d\n", *param_counter);
+    while ( TYPE(temp_node_ptr) == TYPE_OPER && DATA(temp_node_ptr).oper == _COMMA_ ) 
+    {
+        Asm_Translate( RIGHT(temp_node_ptr), func_NameTable, var_NameTable);
+
+        temp_node_ptr = LEFT(temp_node_ptr);
+        param_counter++ ;
+    }
+
+    Asm_Translate(temp_node_ptr, func_NameTable, var_NameTable);
+
+    Relocate_RAM_ptr(FORWARD, func_call_node, func_NameTable, var_NameTable);
+
+    while (param_counter > 0)
+    {
+        PRINT("PUSHR RAX ; %d parametr\n", param_counter - 1);
+        PRINT("PUSH %d\n", param_counter - 1);
         PRINT("ADD\n");
         PRINT("POPR RBX\n");
         PRINT("POPM [RBX]\n");
 
-        (*param_counter)++ ;
-        return cur_node;
+        param_counter-- ;
     }
 
-    if ( LEFT(cur_node) )
-        Init_Func_Params(LEFT(cur_node), func_NameTable, var_NameTable, param_counter);
-
-    if ( RIGHT(cur_node) )
-        Init_Func_Params(RIGHT(cur_node), func_NameTable, var_NameTable, param_counter);
-
-    return cur_node;
+    return func_call_node;
 }
 
 //---------------------------------------------------------------------------------------------------------------------

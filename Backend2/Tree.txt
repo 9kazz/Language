@@ -4,13 +4,13 @@
                                                                                                       nil)
                                                                                              ("NUM 1" nil
                                                                                                       nil))
-                                                                           ("OPER _END_STATEMENT_"("OPER _RETURN_"("OPER _MATH_MUL_"("VAR n" nil
-                                                                                                                                             nil)
-                                                                                                                                    ("FUNC fact"("OPER _MATH_SUB_"("VAR n" nil
+                                                                           ("OPER _END_STATEMENT_"("OPER _RETURN_"("OPER _MATH_MUL_"("FUNC fact"("OPER _MATH_SUB_"("VAR n" nil
                                                                                                                                                                            nil)
                                                                                                                                                                   ("NUM 1" nil
                                                                                                                                                                            nil))
-                                                                                                                                                 nil))
+                                                                                                                                                 nil)
+                                                                                                                                    ("VAR n" nil
+                                                                                                                                             nil))
                                                                                                                    nil)
                                                                                                    nil))
                                                                ("OPER _END_STATEMENT_"("OPER _RETURN_"("VAR n" nil
