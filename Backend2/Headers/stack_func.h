@@ -18,8 +18,8 @@ Fstack_t    func_Stack_Pop      (Fstack_str* stack);
 
 StackErr_t  func_Stack_Realloc  (Fstack_str* stack);
 
-#define STK_DATA(stack)      stack->data
-#define STK_CAPACITY(stack)  stack->capacity
-#define STK_SIZE(stack)      stack->size
+#define STK_DATA(stack)      (stack)->data
+#define STK_CAPACITY(stack)  (stack)->capacity
+#define STK_SIZE(stack)      (stack)->size
 
 #endif  
