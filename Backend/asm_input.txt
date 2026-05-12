@@ -1,0 +1,45 @@
+PUSH 5 ; num
+
+PUSH 0 ; assignment
+POPR RAX
+POPM [RAX]
+
+PUSH 0 ; while
+PUSH 0 ; var
+POPR RAX
+PUSHM [RAX]
+
+PUSH 2 ; num
+
+SUB
+
+JNE: while_0x5040000001d0
+JE: end_while_0x5040000001d0
+while_0x5040000001d0:
+OUT
+OUT
+PUSH 0 ; var
+POPR RAX
+PUSHM [RAX]
+
+PUSH 1 ; num
+
+SUB
+
+PUSH 0 ; assignment
+POPR RAX
+POPM [RAX]
+
+PUSH 0
+PUSH 0 ; var
+POPR RAX
+PUSHM [RAX]
+
+PUSH 2 ; num
+
+SUB
+
+JNE: while_0x5040000001d0
+JE: end_while_0x5040000001d0
+end_while_0x5040000001d0:
+

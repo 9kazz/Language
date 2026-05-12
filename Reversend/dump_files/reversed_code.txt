@@ -1,0 +1,12 @@
+func fact ( n ) 
+{ 
+	if ( n more 1 ) 
+	{ 
+		var f = fact ( n - 1 ) * n ;
+		var a = 0 ;
+		a = a + 1 ;
+		return f ;
+	} ;
+	return n ;
+} ;
+var y = fact ( 5 ) ;

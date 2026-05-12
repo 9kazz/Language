@@ -1,0 +1,42 @@
+("OPER _END_STATEMENT_"("FUNC_INIT fact"("VAR_INIT n" nil
+                                                      nil)
+                                        ("OPER _END_STATEMENT_"("OPER _IF_"("OPER _LOG_MORE_"("VAR n" nil
+                                                                                                      nil)
+                                                                                             ("NUM 1" nil
+                                                                                                      nil))
+                                                                           ("OPER _END_STATEMENT_"("OPER _ASSIGNMENT_"("VAR_INIT f" nil
+                                                                                                                                    nil)
+                                                                                                                      ("OPER _MATH_MUL_"("FUNC fact"("OPER _MATH_SUB_"("VAR n" nil
+                                                                                                                                                                               nil)
+                                                                                                                                                                      ("NUM 1" nil
+                                                                                                                                                                               nil))
+                                                                                                                                                     nil)
+                                                                                                                                        ("VAR n" nil
+                                                                                                                                                 nil)))
+                                                                                                  ("OPER _END_STATEMENT_"("OPER _ASSIGNMENT_"("VAR_INIT a" nil
+                                                                                                                                                           nil)
+                                                                                                                                             ("NUM 0" nil
+                                                                                                                                                      nil))
+                                                                                                                         ("OPER _END_STATEMENT_"("OPER _ASSIGNMENT_"("VAR a" nil
+                                                                                                                                                                             nil)
+                                                                                                                                                                    ("OPER _MATH_ADD_"("VAR a" nil
+                                                                                                                                                                                               nil)
+                                                                                                                                                                                      ("NUM 1" nil
+                                                                                                                                                                                               nil)))
+                                                                                                                                                ("OPER _END_STATEMENT_"("OPER _RETURN_"("VAR f" nil
+                                                                                                                                                                                                nil)
+                                                                                                                                                                                        nil)
+                                                                                                                                                                        nil)))))
+                                                               ("OPER _END_STATEMENT_"("OPER _RETURN_"("VAR n" nil
+                                                                                                               nil)
+                                                                                                       nil)
+                                                                                       nil)))
+                       ("OPER _END_STATEMENT_"("OPER _ASSIGNMENT_"("VAR_INIT y" nil
+                                                                                nil)
+                                                                  ("FUNC fact"("NUM 5" nil
+                                                                                       nil)
+                                                                               nil))
+                                              ("OPER _END_STATEMENT_"("OPER _PRINT_"("VAR y" nil
+                                                                                             nil)
+                                                                                     nil)
+                                                                      nil)))
